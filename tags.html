@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Tags — Rei's Asset Library</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+</head>
+
+
+<body>
+
+
+<header class="topbar">
+
+    <div class="logo">
+
+        <a
+            href="index.html"
+            style="text-decoration:none;color:inherit;"
+        >
+
+            <span class="logo-main">
+                REI'S ASSET LIBRARY
+            </span>
+
+            <span class="logo-sub">
+                PERSONAL ARCHIVE
+            </span>
+
+        </a>
+
+    </div>
+
+
+    <div class="top-actions">
+
+        <a
+            class="button"
+            href="index.html"
+        >
+            ASSETS
+        </a>
+
+    </div>
+
+</header>
+
+
+<main>
+
+
+    <section class="header">
+
+        <h1 class="header-title">
+            TAG INDEX
+        </h1>
+
+        <p class="header-subtitle">
+            Every tag currently used in the archive.
+        </p>
+
+    </section>
+
+
+    <section
+        class="tags-page"
+        id="tagList"
+    >
+
+        <div class="no-results">
+            LOADING TAGS...
+        </div>
+
+    </section>
+
+
+</main>
+
+
+<script>
+
+
+async function loadTags() {
+
+    const container =
+        document.getElementById("tagList");
+
+
+    try {
+
+        const response =
+            await fetch("assets.json");
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Could not load assets.json"
+            );
+
+        }
+
+
+        const assets =
+            await response.json();
+
+
+        const tagCounts = {};
+
+
+        assets.forEach(asset => {
+
+            asset.tags.forEach(tag => {
+
+                const normalized =
+                    tag.trim().toLowerCase();
+
+
+                if (!normalized) {
+                    return;
+                }
+
+
+                tagCounts[normalized] =
+                    (tagCounts[normalized] || 0) + 1;
+
+            });
+
+        });
+
+
+        const sortedTags =
+            Object.entries(tagCounts)
+                .sort(
+                    (a, b) =>
+                        b[1] - a[1] ||
+                        a[0].localeCompare(b[0])
+                );
+
+
+        container.innerHTML = "";
+
+
+        if (sortedTags.length === 0) {
+
+            container.innerHTML = `
+                <div class="no-results">
+                    NO TAGS FOUND
+                </div>
+            `;
+
+            return;
+
+        }
+
+
+        sortedTags.forEach(
+            ([tag, count]) => {
+
+                const link =
+                    document.createElement("a");
+
+
+                link.className =
+                    "tag-index-item";
+
+
+                link.href =
+                    `index.html?tag=${encodeURIComponent(tag)}`;
+
+
+                link.innerHTML = `
+                    <span class="tag-index-name">
+                        #${tag.toUpperCase()}
+                    </span>
+
+                    <span class="tag-index-count">
+                        ${count}
+                    </span>
+                `;
+
+
+                container.appendChild(link);
+
+            }
+        );
+
+
+    } catch (error) {
+
+        console.error(error);
+
+
+        container.innerHTML = `
+            <div class="no-results">
+                FAILED TO LOAD TAGS
+            </div>
+        `;
+
+    }
+
+}
+
+
+loadTags();
+
+</script>
+
+
+</body>
+
+</html>
