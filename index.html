@@ -3,11 +3,585 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Asset Library</title>
+
+    <title>Rei's Asset Library</title>
+
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-    <h1>Asset Library</h1>
-    <p>My personal collection of brushes, materials and other assets.</p>
+
+<header class="topbar">
+
+    <div class="logo">
+        <span class="logo-main">REI'S ASSET LIBRARY</span>
+        <span class="logo-sub">PERSONAL ARCHIVE</span>
+    </div>
+
+    <div class="search-wrap">
+        <input
+            id="searchInput"
+            class="search"
+            type="search"
+            placeholder="SEARCH THE ARCHIVE..."
+        >
+    </div>
+
+    <div class="top-actions">
+        <button class="button" id="addButton">
+            + ADD ASSET
+        </button>
+    </div>
+
+</header>
+
+
+<main>
+
+    <section class="header">
+
+        <h1 class="header-title">
+            ASSET ARCHIVE
+        </h1>
+
+        <p class="header-subtitle">
+            Brushes, materials, textures and everything else I refuse to lose.
+        </p>
+
+    </section>
+
+
+    <section class="toolbar">
+
+        <button class="filter-button active" data-filter="all">
+            ALL
+        </button>
+
+        <button class="filter-button" data-filter="brush">
+            BRUSHES
+        </button>
+
+        <button class="filter-button" data-filter="material">
+            MATERIALS
+        </button>
+
+        <button class="filter-button" data-filter="texture">
+            TEXTURES
+        </button>
+
+        <button class="filter-button" data-filter="3d">
+            3D
+        </button>
+
+        <select class="filter-select" id="softwareFilter">
+            <option value="all">ALL SOFTWARE</option>
+            <option value="csp">CLIP STUDIO PAINT</option>
+            <option value="ps">PHOTOSHOP</option>
+            <option value="other">OTHER</option>
+        </select>
+
+    </section>
+
+
+    <section class="asset-grid" id="assetGrid">
+
+        <!-- ASSET 1 -->
+
+        <article
+            class="asset-card"
+            data-type="brush"
+            data-software="csp"
+            data-search="soft pencil pencil sketch soft csp"
+            data-name="Soft Pencil"
+        >
+
+            <div class="asset-preview">
+                <div class="preview-placeholder">
+                    PREVIEW 01
+                </div>
+            </div>
+
+            <div class="asset-info">
+
+                <div class="asset-type">
+                    CLIP STUDIO PAINT / BRUSH
+                </div>
+
+                <h2 class="asset-name">
+                    Soft Pencil
+                </h2>
+
+                <p class="asset-description">
+                    A soft textured pencil for rough sketches,
+                    loose lineart and quick thumbnails.
+                </p>
+
+                <div class="asset-footer">
+
+                    <div class="tags">
+                        <span class="tag">PENCIL</span>
+                        <span class="tag">SKETCH</span>
+                        <span class="tag">SOFT</span>
+                    </div>
+
+                    <span class="asset-count">
+                        #001
+                    </span>
+
+                </div>
+
+            </div>
+
+        </article>
+
+
+        <!-- ASSET 2 -->
+
+        <article
+            class="asset-card"
+            data-type="brush"
+            data-software="csp"
+            data-search="watercolor paint soft texture csp"
+            data-name="Watercolor Soft"
+        >
+
+            <div class="asset-preview">
+                <div class="preview-placeholder">
+                    PREVIEW 02
+                </div>
+            </div>
+
+            <div class="asset-info">
+
+                <div class="asset-type">
+                    CLIP STUDIO PAINT / BRUSH
+                </div>
+
+                <h2 class="asset-name">
+                    Watercolor Soft
+                </h2>
+
+                <p class="asset-description">
+                    Soft watercolor brush with a slightly
+                    uneven edge. Useful for painting and effects.
+                </p>
+
+                <div class="asset-footer">
+
+                    <div class="tags">
+                        <span class="tag">WATERCOLOR</span>
+                        <span class="tag">PAINT</span>
+                        <span class="tag">TEXTURE</span>
+                    </div>
+
+                    <span class="asset-count">
+                        #002
+                    </span>
+
+                </div>
+
+            </div>
+
+        </article>
+
+
+        <!-- ASSET 3 -->
+
+        <article
+            class="asset-card"
+            data-type="texture"
+            data-software="ps"
+            data-search="paper grain texture photoshop paper"
+            data-name="Paper Grain"
+        >
+
+            <div class="asset-preview">
+                <div class="preview-placeholder">
+                    PREVIEW 03
+                </div>
+            </div>
+
+            <div class="asset-info">
+
+                <div class="asset-type">
+                    PHOTOSHOP / TEXTURE
+                </div>
+
+                <h2 class="asset-name">
+                    Paper Grain
+                </h2>
+
+                <p class="asset-description">
+                    Fine paper texture for overlays,
+                    backgrounds and subtle surface noise.
+                </p>
+
+                <div class="asset-footer">
+
+                    <div class="tags">
+                        <span class="tag">PAPER</span>
+                        <span class="tag">GRAIN</span>
+                        <span class="tag">TEXTURE</span>
+                    </div>
+
+                    <span class="asset-count">
+                        #003
+                    </span>
+
+                </div>
+
+            </div>
+
+        </article>
+
+
+        <!-- ASSET 4 -->
+
+        <article
+            class="asset-card"
+            data-type="material"
+            data-software="csp"
+            data-search="skin rendering blush material csp"
+            data-name="Skin Blush"
+        >
+
+            <div class="asset-preview">
+                <div class="preview-placeholder">
+                    PREVIEW 04
+                </div>
+            </div>
+
+            <div class="asset-info">
+
+                <div class="asset-type">
+                    CLIP STUDIO PAINT / MATERIAL
+                </div>
+
+                <h2 class="asset-name">
+                    Skin Blush
+                </h2>
+
+                <p class="asset-description">
+                    A small material set for soft blush,
+                    skin tones and subtle colour variation.
+                </p>
+
+                <div class="asset-footer">
+
+                    <div class="tags">
+                        <span class="tag">SKIN</span>
+                        <span class="tag">BLUSH</span>
+                        <span class="tag">RENDER</span>
+                    </div>
+
+                    <span class="asset-count">
+                        #004
+                    </span>
+
+                </div>
+
+            </div>
+
+        </article>
+
+    </section>
+
+</main>
+
+
+<!-- ASSET MODAL -->
+
+<div class="modal" id="assetModal">
+
+    <div class="modal-window">
+
+        <div class="modal-header">
+
+            <span class="modal-label">
+                ASSET DETAILS
+            </span>
+
+            <button class="close-button" id="closeModal">
+                ×
+            </button>
+
+        </div>
+
+
+        <div class="modal-content">
+
+            <div class="modal-preview">
+                <div class="modal-placeholder" id="modalPreview">
+                    PREVIEW
+                </div>
+            </div>
+
+
+            <div class="modal-info">
+
+                <div class="modal-type" id="modalType">
+                    CLIP STUDIO PAINT / BRUSH
+                </div>
+
+                <h2 class="modal-title" id="modalTitle">
+                    Soft Pencil
+                </h2>
+
+                <p class="modal-description" id="modalDescription">
+                    A soft textured pencil for rough sketches,
+                    loose lineart and quick thumbnails.
+                </p>
+
+
+                <div class="modal-section">
+
+                    <div class="modal-section-title">
+                        TAGS
+                    </div>
+
+                    <div class="tags">
+                        <span class="tag">PENCIL</span>
+                        <span class="tag">SKETCH</span>
+                        <span class="tag">SOFT</span>
+                    </div>
+
+                </div>
+
+
+                <div class="modal-section">
+
+                    <div class="modal-section-title">
+                        LINKS
+                    </div>
+
+                    <div class="modal-actions">
+
+                        <button class="button">
+                            SOURCE
+                        </button>
+
+                        <button class="button">
+                            DOWNLOAD
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    const searchInput = document.getElementById("searchInput");
+    const assetGrid = document.getElementById("assetGrid");
+    const assetCards = Array.from(
+        document.querySelectorAll(".asset-card")
+    );
+
+    const filterButtons = document.querySelectorAll(".filter-button");
+    const softwareFilter = document.getElementById("softwareFilter");
+
+    const modal = document.getElementById("assetModal");
+    const closeModal = document.getElementById("closeModal");
+
+    const modalTitle = document.getElementById("modalTitle");
+    const modalType = document.getElementById("modalType");
+    const modalDescription = document.getElementById("modalDescription");
+    const modalPreview = document.getElementById("modalPreview");
+
+    let activeType = "all";
+
+
+    function filterAssets() {
+
+        const search =
+            searchInput.value.trim().toLowerCase();
+
+        const software =
+            softwareFilter.value;
+
+        let visibleCount = 0;
+
+
+        assetCards.forEach(card => {
+
+            const type =
+                card.dataset.type;
+
+            const cardSoftware =
+                card.dataset.software;
+
+            const searchable =
+                card.dataset.search.toLowerCase();
+
+
+            const matchesType =
+                activeType === "all" ||
+                type === activeType;
+
+
+            const matchesSoftware =
+                software === "all" ||
+                cardSoftware === software;
+
+
+            const matchesSearch =
+                searchable.includes(search);
+
+
+            const visible =
+                matchesType &&
+                matchesSoftware &&
+                matchesSearch;
+
+
+            card.style.display =
+                visible ? "grid" : "none";
+
+
+            if (visible) {
+                visibleCount++;
+            }
+
+        });
+
+
+        let noResults =
+            document.querySelector(".no-results");
+
+
+        if (visibleCount === 0) {
+
+            if (!noResults) {
+
+                noResults =
+                    document.createElement("div");
+
+                noResults.className =
+                    "no-results";
+
+                noResults.textContent =
+                    "NO ASSETS FOUND";
+
+                assetGrid.appendChild(noResults);
+            }
+
+        } else if (noResults) {
+
+            noResults.remove();
+
+        }
+
+    }
+
+
+    searchInput.addEventListener(
+        "input",
+        filterAssets
+    );
+
+
+    softwareFilter.addEventListener(
+        "change",
+        filterAssets
+    );
+
+
+    filterButtons.forEach(button => {
+
+        button.addEventListener(
+            "click",
+            () => {
+
+                filterButtons.forEach(
+                    item =>
+                        item.classList.remove("active")
+                );
+
+                button.classList.add("active");
+
+                activeType =
+                    button.dataset.filter;
+
+                filterAssets();
+
+            }
+        );
+
+    });
+
+
+    assetCards.forEach(card => {
+
+        card.addEventListener(
+            "click",
+            () => {
+
+                modalTitle.textContent =
+                    card.dataset.name;
+
+                modalType.textContent =
+                    card.querySelector(".asset-type").textContent;
+
+                modalDescription.textContent =
+                    card.querySelector(".asset-description").textContent;
+
+                modalPreview.innerHTML =
+                    card.querySelector(".preview-placeholder").outerHTML;
+
+                modal.classList.add("open");
+
+            }
+        );
+
+    });
+
+
+    function closeAssetModal() {
+        modal.classList.remove("open");
+    }
+
+
+    closeModal.addEventListener(
+        "click",
+        closeAssetModal
+    );
+
+
+    modal.addEventListener(
+        "click",
+        event => {
+
+            if (event.target === modal) {
+                closeAssetModal();
+            }
+
+        }
+    );
+
+
+    document.addEventListener(
+        "keydown",
+        event => {
+
+            if (
+                event.key === "Escape" &&
+                modal.classList.contains("open")
+            ) {
+                closeAssetModal();
+            }
+
+        }
+    );
+
+</script>
+
 </body>
 </html>
