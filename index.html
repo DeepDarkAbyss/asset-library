@@ -28,15 +28,41 @@
 
     <div class="logo">
 
-        <span class="logo-main">
-            REI'S ASSET LIBRARY
-        </span>
+        <a
+            href="index.html"
+            class="logo-link"
+        >
 
-        <span class="logo-sub">
-            PERSONAL ARCHIVE
-        </span>
+            <span class="logo-main">
+                REI'S ASSET LIBRARY
+            </span>
+
+            <span class="logo-sub">
+                PERSONAL ARCHIVE
+            </span>
+
+        </a>
 
     </div>
+
+
+    <nav class="nav">
+
+        <a
+            class="nav-link active"
+            href="index.html"
+        >
+            ASSETS
+        </a>
+
+        <a
+            class="nav-link"
+            href="tags.html"
+        >
+            TAGS
+        </a>
+
+    </nav>
 
 
     <div class="search-wrap">
@@ -75,7 +101,10 @@
             ASSET ARCHIVE
         </h1>
 
-        <p class="header-subtitle">
+        <p
+            class="header-subtitle"
+            id="archiveSubtitle"
+        >
             Brushes, materials, textures and everything else I refuse to lose.
         </p>
 
@@ -147,6 +176,12 @@
             </option>
 
         </select>
+
+
+        <div
+            class="active-tag-filter"
+            id="activeTagFilter"
+        ></div>
 
 
     </section>
@@ -225,7 +260,6 @@
 
                 <div class="modal-section">
 
-
                     <div class="modal-section-title">
                         TAGS
                     </div>
@@ -236,12 +270,10 @@
                         id="modalTags"
                     ></div>
 
-
                 </div>
 
 
                 <div class="modal-section">
-
 
                     <div class="modal-section-title">
                         LINKS
@@ -273,7 +305,6 @@
 
                     </div>
 
-
                 </div>
 
 
@@ -296,57 +327,107 @@ let assets = [];
 
 let activeType = "all";
 
+let activeTag = new URLSearchParams(
+    window.location.search
+).get("tag");
+
+
+if (activeTag) {
+
+    activeTag =
+        activeTag.trim().toLowerCase();
+
+}
+
 
 const searchInput =
-    document.getElementById("searchInput");
+    document.getElementById(
+        "searchInput"
+    );
 
 
 const assetGrid =
-    document.getElementById("assetGrid");
+    document.getElementById(
+        "assetGrid"
+    );
 
 
 const softwareFilter =
-    document.getElementById("softwareFilter");
+    document.getElementById(
+        "softwareFilter"
+    );
 
 
 const filterButtons =
-    document.querySelectorAll(".filter-button");
+    document.querySelectorAll(
+        ".filter-button"
+    );
 
 
 const modal =
-    document.getElementById("assetModal");
+    document.getElementById(
+        "assetModal"
+    );
 
 
 const closeModal =
-    document.getElementById("closeModal");
+    document.getElementById(
+        "closeModal"
+    );
 
 
 const modalTitle =
-    document.getElementById("modalTitle");
+    document.getElementById(
+        "modalTitle"
+    );
 
 
 const modalType =
-    document.getElementById("modalType");
+    document.getElementById(
+        "modalType"
+    );
 
 
 const modalDescription =
-    document.getElementById("modalDescription");
+    document.getElementById(
+        "modalDescription"
+    );
 
 
 const modalPreview =
-    document.getElementById("modalPreview");
+    document.getElementById(
+        "modalPreview"
+    );
 
 
 const modalTags =
-    document.getElementById("modalTags");
+    document.getElementById(
+        "modalTags"
+    );
 
 
 const sourceButton =
-    document.getElementById("sourceButton");
+    document.getElementById(
+        "sourceButton"
+    );
 
 
 const downloadButton =
-    document.getElementById("downloadButton");
+    document.getElementById(
+        "downloadButton"
+    );
+
+
+const activeTagFilter =
+    document.getElementById(
+        "activeTagFilter"
+    );
+
+
+const archiveSubtitle =
+    document.getElementById(
+        "archiveSubtitle"
+    );
 
 
 
@@ -371,11 +452,16 @@ async function loadAssets() {
             await response.json();
 
 
+        updateTagFilter();
+
+
         renderAssets();
+
 
     } catch (error) {
 
         console.error(error);
+
 
         assetGrid.innerHTML = `
             <div class="no-results">
@@ -389,18 +475,35 @@ async function loadAssets() {
 
 
 
-function createTagElement(tag) {
+function createTagLink(tag) {
 
-    const element =
-        document.createElement("span");
+    const link =
+        document.createElement("a");
 
-    element.className =
-        "tag";
 
-    element.textContent =
+    link.className =
+        "tag tag-link";
+
+
+    link.href =
+        `index.html?tag=${encodeURIComponent(tag)}`;
+
+
+    link.textContent =
         tag.toUpperCase();
 
-    return element;
+
+    link.addEventListener(
+        "click",
+        event => {
+
+            event.stopPropagation();
+
+        }
+    );
+
+
+    return link;
 
 }
 
@@ -411,6 +514,7 @@ function createPreview(asset) {
     const container =
         document.createElement("div");
 
+
     container.className =
         "asset-preview";
 
@@ -420,31 +524,33 @@ function createPreview(asset) {
         const image =
             document.createElement("img");
 
+
         image.src =
             asset.preview;
+
 
         image.alt =
             asset.name;
 
-        image.style.width =
-            "100%";
 
-        image.style.height =
-            "100%";
-
-        image.style.objectFit =
-            "contain";
+        image.className =
+            "asset-image";
 
 
-        container.appendChild(image);
+        container.appendChild(
+            image
+        );
+
 
     } else {
 
         const placeholder =
             document.createElement("div");
 
+
         placeholder.className =
             "preview-placeholder";
+
 
         placeholder.textContent =
             "PREVIEW";
@@ -458,6 +564,101 @@ function createPreview(asset) {
 
 
     return container;
+
+}
+
+
+
+function updateTagFilter() {
+
+    activeTagFilter.innerHTML = "";
+
+
+    if (!activeTag) {
+
+        archiveSubtitle.textContent =
+            "Brushes, materials, textures and everything else I refuse to lose.";
+
+        return;
+
+    }
+
+
+    archiveSubtitle.textContent =
+        "Showing assets filtered by tag.";
+
+
+    const label =
+        document.createElement("span");
+
+
+    label.className =
+        "active-tag-label";
+
+
+    label.textContent =
+        `TAG: #${activeTag.toUpperCase()}`;
+
+
+    const clear =
+        document.createElement("button");
+
+
+    clear.className =
+        "active-tag-clear";
+
+
+    clear.textContent =
+        "×";
+
+
+    clear.title =
+        "Clear tag filter";
+
+
+    clear.addEventListener(
+        "click",
+        clearActiveTag
+    );
+
+
+    label.appendChild(clear);
+
+
+    activeTagFilter.appendChild(
+        label
+    );
+
+}
+
+
+
+function clearActiveTag() {
+
+    activeTag = null;
+
+
+    const url =
+        new URL(
+            window.location.href
+        );
+
+
+    url.searchParams.delete(
+        "tag"
+    );
+
+
+    window.history.pushState(
+        {},
+        "",
+        url
+    );
+
+
+    updateTagFilter();
+
+    renderAssets();
 
 }
 
@@ -492,6 +693,15 @@ function renderAssets() {
                 asset.software === software;
 
 
+            const matchesTag =
+                !activeTag ||
+                asset.tags.some(
+                    tag =>
+                        tag.trim().toLowerCase() ===
+                        activeTag
+                );
+
+
             const searchable = [
                 asset.name,
                 asset.description,
@@ -504,12 +714,15 @@ function renderAssets() {
 
 
             const matchesSearch =
-                searchable.includes(search);
+                searchable.includes(
+                    search
+                );
 
 
             return (
                 matchesType &&
                 matchesSoftware &&
+                matchesTag &&
                 matchesSearch
             );
 
@@ -540,6 +753,7 @@ function renderAssets() {
 
         card.className =
             "asset-card";
+
 
 
         card.appendChild(
@@ -619,7 +833,7 @@ function renderAssets() {
             .forEach(tag => {
 
                 tags.appendChild(
-                    createTagElement(tag)
+                    createTagLink(tag)
                 );
 
             });
@@ -637,27 +851,48 @@ function renderAssets() {
         count.textContent =
             "#" +
             String(asset.id)
-                .padStart(3, "0");
+                .padStart(
+                    3,
+                    "0"
+                );
 
 
 
-        footer.appendChild(tags);
+        footer.appendChild(
+            tags
+        );
 
-        footer.appendChild(count);
 
-
-
-        info.appendChild(type);
-
-        info.appendChild(name);
-
-        info.appendChild(description);
-
-        info.appendChild(footer);
+        footer.appendChild(
+            count
+        );
 
 
 
-        card.appendChild(info);
+        info.appendChild(
+            type
+        );
+
+
+        info.appendChild(
+            name
+        );
+
+
+        info.appendChild(
+            description
+        );
+
+
+        info.appendChild(
+            footer
+        );
+
+
+
+        card.appendChild(
+            info
+        );
 
 
 
@@ -668,7 +903,9 @@ function renderAssets() {
 
 
 
-        assetGrid.appendChild(card);
+        assetGrid.appendChild(
+            card
+        );
 
     });
 
@@ -696,7 +933,7 @@ function openModal(asset) {
     asset.tags.forEach(tag => {
 
         modalTags.appendChild(
-            createTagElement(tag)
+            createTagLink(tag)
         );
 
     });
@@ -706,39 +943,38 @@ function openModal(asset) {
     modalPreview.innerHTML = "";
 
 
-
     if (asset.preview) {
 
         const image =
             document.createElement("img");
 
+
         image.src =
             asset.preview;
+
 
         image.alt =
             asset.name;
 
-        image.style.width =
-            "100%";
 
-        image.style.height =
-            "100%";
-
-        image.style.objectFit =
-            "contain";
+        image.className =
+            "modal-image";
 
 
         modalPreview.appendChild(
             image
         );
 
+
     } else {
 
         const placeholder =
             document.createElement("div");
 
+
         placeholder.className =
             "modal-placeholder";
+
 
         placeholder.textContent =
             "PREVIEW";
@@ -757,6 +993,7 @@ function openModal(asset) {
         sourceButton.href =
             asset.source;
 
+
         sourceButton.style.display =
             "inline-flex";
 
@@ -773,6 +1010,7 @@ function openModal(asset) {
 
         downloadButton.href =
             asset.download;
+
 
         downloadButton.style.display =
             "inline-flex";
@@ -818,36 +1056,38 @@ softwareFilter.addEventListener(
 
 
 
-filterButtons.forEach(button => {
+filterButtons.forEach(
+    button => {
 
-    button.addEventListener(
-        "click",
-        () => {
-
-
-            filterButtons.forEach(
-                item =>
-                    item.classList.remove(
-                        "active"
-                    )
-            );
+        button.addEventListener(
+            "click",
+            () => {
 
 
-            button.classList.add(
-                "active"
-            );
+                filterButtons.forEach(
+                    item =>
+                        item.classList.remove(
+                            "active"
+                        )
+                );
 
 
-            activeType =
-                button.dataset.filter;
+                button.classList.add(
+                    "active"
+                );
 
 
-            renderAssets();
+                activeType =
+                    button.dataset.filter;
 
-        }
-    );
 
-});
+                renderAssets();
+
+            }
+        );
+
+    }
+);
 
 
 
@@ -894,6 +1134,7 @@ document.addEventListener(
 
 
 loadAssets();
+
 
 </script>
 
