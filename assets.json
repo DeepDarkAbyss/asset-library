@@ -1,0 +1,50 @@
+[
+    {
+        "id": 1,
+        "name": "Soft Pencil",
+        "type": "brush",
+        "software": "csp",
+        "typeLabel": "CLIP STUDIO PAINT / BRUSH",
+        "description": "A soft textured pencil for rough sketches, loose lineart and quick thumbnails.",
+        "tags": ["pencil", "sketch", "soft"],
+        "preview": "",
+        "source": "",
+        "download": ""
+    },
+    {
+        "id": 2,
+        "name": "Watercolor Soft",
+        "type": "brush",
+        "software": "csp",
+        "typeLabel": "CLIP STUDIO PAINT / BRUSH",
+        "description": "Soft watercolor brush with a slightly uneven edge. Useful for painting and effects.",
+        "tags": ["watercolor", "paint", "texture"],
+        "preview": "",
+        "source": "",
+        "download": ""
+    },
+    {
+        "id": 3,
+        "name": "Paper Grain",
+        "type": "texture",
+        "software": "ps",
+        "typeLabel": "PHOTOSHOP / TEXTURE",
+        "description": "Fine paper texture for overlays, backgrounds and subtle surface noise.",
+        "tags": ["paper", "grain", "texture"],
+        "preview": "",
+        "source": "",
+        "download": ""
+    },
+    {
+        "id": 4,
+        "name": "Skin Blush",
+        "type": "material",
+        "software": "csp",
+        "typeLabel": "CLIP STUDIO PAINT / MATERIAL",
+        "description": "A small material set for soft blush, skin tones and subtle colour variation.",
+        "tags": ["skin", "blush", "render"],
+        "preview": "",
+        "source": "",
+        "download": ""
+    }
+]
