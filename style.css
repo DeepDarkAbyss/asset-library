@@ -587,3 +587,60 @@ main {
         padding: 20px;
     }
 }
+
+.tags-page {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.tag-index-item {
+    min-height: 58px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 18px;
+
+    border: 1px solid var(--border);
+    background: var(--panel);
+
+    color: var(--text);
+    text-decoration: none;
+
+    transition:
+        background 0.15s ease,
+        border-color 0.15s ease;
+}
+
+.tag-index-item:hover {
+    background: var(--panel-hover);
+    border-color: #505050;
+}
+
+.tag-index-name {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+}
+
+.tag-index-count {
+    color: var(--text-dark);
+    font-size: 9px;
+}
+
+@media (max-width: 900px) {
+
+    .tags-page {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+
+@media (max-width: 550px) {
+
+    .tags-page {
+        grid-template-columns: 1fr;
+    }
+
+}
