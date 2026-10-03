@@ -17,6 +17,10 @@
         href="style.css"
     >
 
+   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="supabase.js"></script>
+    
 </head>
 
 
@@ -222,7 +226,122 @@ async function loadTags() {
 }
 
 
-loadTags();
+async function loadTags() {
+
+    const container =
+        document.getElementById("tagList");
+
+
+    try {
+
+        const {
+            data,
+            error
+        } = await supabaseClient
+            .from("assets")
+            .select("tags");
+
+
+        if (error) {
+            throw error;
+        }
+
+
+        const tagCounts = {};
+
+
+        (data || []).forEach(asset => {
+
+            (asset.tags || []).forEach(tag => {
+
+                const normalized =
+                    tag.trim().toLowerCase();
+
+
+                if (!normalized) {
+                    return;
+                }
+
+
+                tagCounts[normalized] =
+                    (tagCounts[normalized] || 0) + 1;
+
+            });
+
+        });
+
+
+        const sortedTags =
+            Object.entries(tagCounts)
+                .sort(
+                    (a, b) =>
+                        b[1] - a[1] ||
+                        a[0].localeCompare(b[0])
+                );
+
+
+        container.innerHTML = "";
+
+
+        if (sortedTags.length === 0) {
+
+            container.innerHTML = `
+                <div class="no-results">
+                    NO TAGS FOUND
+                </div>
+            `;
+
+            return;
+
+        }
+
+
+        sortedTags.forEach(
+            ([tag, count]) => {
+
+                const link =
+                    document.createElement("a");
+
+
+                link.className =
+                    "tag-index-item";
+
+
+                link.href =
+                    `index.html?tag=${encodeURIComponent(tag)}`;
+
+
+                link.innerHTML = `
+                    <span class="tag-index-name">
+                        #${tag.toUpperCase()}
+                    </span>
+
+                    <span class="tag-index-count">
+                        ${count}
+                    </span>
+                `;
+
+
+                container.appendChild(link);
+
+            }
+        );
+
+
+    } catch (error) {
+
+        console.error(error);
+
+
+        container.innerHTML = `
+            <div class="no-results">
+                FAILED TO LOAD TAGS
+            </div>
+        `;
+
+    }
+
+}
 
 </script>
 
