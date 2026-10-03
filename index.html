@@ -228,12 +228,17 @@
             <div class="modal-preview">
 
                 <div
-                    class="modal-placeholder"
+                    class="modal-main-preview"
                     id="modalPreview"
                 >
                     PREVIEW
                 </div>
-
+            
+                <div
+                    class="gallery"
+                    id="modalGallery"
+                ></div>
+            
             </div>
 
 
@@ -250,12 +255,31 @@
                     class="modal-title"
                     id="modalTitle"
                 ></h2>
+                    <div
+                    class="modal-author"
+                    id="modalAuthor"
+                    ></div>
 
 
                 <p
                     class="modal-description"
                     id="modalDescription"
                 ></p>
+                <div
+                      class="modal-section"
+                      id="notesSection"
+                    >
+                    
+                      <div class="modal-section-title">
+                            NOTES
+                     </div>
+                    
+                     <p
+                         class="modal-notes"
+                         id="modalNotes"
+                    ></p>
+                    
+                    </div>
 
 
                 <div class="modal-section">
@@ -392,7 +416,26 @@ const modalDescription =
     document.getElementById(
         "modalDescription"
     );
+    
+const modalAuthor =
+    document.getElementById(
+        "modalAuthor"
+    );
 
+const modalNotes =
+    document.getElementById(
+        "modalNotes"
+    );
+
+const notesSection =
+    document.getElementById(
+        "notesSection"
+    );
+
+const modalGallery =
+    document.getElementById(
+        "modalGallery"
+    );
 
 const modalPreview =
     document.getElementById(
@@ -924,6 +967,31 @@ function openModal(asset) {
 
     modalDescription.textContent =
         asset.description;
+    modalAuthor.textContent =
+    asset.author
+        ? `BY ${asset.author.toUpperCase()}`
+        : "";
+
+modalAuthor.style.display =
+    asset.author
+        ? "block"
+        : "none";
+
+
+if (asset.notes) {
+
+    modalNotes.textContent =
+        asset.notes;
+
+    notesSection.style.display =
+        "block";
+
+} else {
+
+    notesSection.style.display =
+        "none";
+
+}
 
 
     modalTags.innerHTML = "";
@@ -985,7 +1053,62 @@ function openModal(asset) {
 
     }
 
+modalGallery.innerHTML = "";
 
+
+const galleryImages =
+    asset.gallery || [];
+
+
+galleryImages
+    .filter(image => image && image.trim())
+    .forEach(imageUrl => {
+
+        const image =
+            document.createElement("img");
+
+
+        image.src =
+            imageUrl;
+
+        image.alt =
+            asset.name;
+
+        image.className =
+            "gallery-image";
+
+
+        image.addEventListener(
+            "click",
+            () => {
+
+                modalPreview.innerHTML = "";
+
+                const mainImage =
+                    document.createElement("img");
+
+                mainImage.src =
+                    imageUrl;
+
+                mainImage.alt =
+                    asset.name;
+
+                mainImage.className =
+                    "modal-image";
+
+                modalPreview.appendChild(
+                    mainImage
+                );
+
+            }
+        );
+
+
+        modalGallery.appendChild(
+            image
+        );
+
+    });
 
     if (asset.source) {
 
