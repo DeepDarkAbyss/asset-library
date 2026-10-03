@@ -17,6 +17,10 @@
         href="style.css"
     >
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="supabase.js"></script>
+
 </head>
 
 
@@ -473,37 +477,42 @@ const archiveSubtitle =
     );
 
 
-
 async function loadAssets() {
 
     try {
 
-        const response =
-            await fetch("assets.json");
+        const {
+            data,
+            error
+        } = await supabaseClient
+            .from("assets")
+            .select("*")
+            .order("id", {
+                ascending: true
+            });
 
 
-        if (!response.ok) {
+        if (error) {
 
-            throw new Error(
-                "Could not load assets.json"
-            );
+            throw error;
 
         }
 
 
-        assets =
-            await response.json();
+        assets = data || [];
 
 
         updateTagFilter();
-
 
         renderAssets();
 
 
     } catch (error) {
 
-        console.error(error);
+        console.error(
+            "Failed to load assets:",
+            error
+        );
 
 
         assetGrid.innerHTML = `
