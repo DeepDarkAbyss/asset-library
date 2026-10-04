@@ -935,6 +935,52 @@ const archiveSubtitle =
         "archiveSubtitle"
     );
 
+    addButton.addEventListener(
+    "click",
+    () => {
+
+        addAssetStatus.textContent = "";
+
+        addAssetForm.reset();
+
+        addAssetModal.classList.add(
+            "open"
+        );
+
+        assetName.focus();
+
+    }
+);
+
+
+closeAddAssetModal.addEventListener(
+    "click",
+    () => {
+
+        addAssetModal.classList.remove(
+            "open"
+        );
+
+    }
+);
+
+
+addAssetModal.addEventListener(
+    "click",
+    event => {
+
+        if (
+            event.target === addAssetModal
+        ) {
+
+            addAssetModal.classList.remove(
+                "open"
+            );
+
+        }
+
+    }
+);
 
 async function loadAssets() {
 
@@ -1921,6 +1967,182 @@ logoutButton.addEventListener(
             );
 
         }
+
+    }
+);
+    function getTypeLabel(type, software) {
+
+    const softwareLabels = {
+
+        csp:
+            "CLIP STUDIO PAINT",
+
+        ps:
+            "PHOTOSHOP",
+
+        other:
+            "OTHER"
+
+    };
+
+
+    const typeLabels = {
+
+        brush:
+            "BRUSH",
+
+        material:
+            "MATERIAL",
+
+        texture:
+            "TEXTURE",
+
+        "3d":
+            "3D",
+
+        other:
+            "OTHER"
+
+    };
+
+
+    return (
+        `${softwareLabels[software] || "OTHER"} / ` +
+        `${typeLabels[type] || "OTHER"}`
+    );
+
+}
+
+    addAssetForm.addEventListener(
+    "submit",
+    async event => {
+
+        event.preventDefault();
+
+
+        addAssetStatus.textContent =
+            "SAVING...";
+
+
+        const tags =
+            assetTags.value
+                .split(",")
+                .map(tag =>
+                    tag.trim().toLowerCase()
+                )
+                .filter(Boolean);
+
+
+        const typeLabels = {
+
+            brush:
+                "CLIP STUDIO PAINT / BRUSH",
+
+            material:
+                "CLIP STUDIO PAINT / MATERIAL",
+
+            texture:
+                "PHOTOSHOP / TEXTURE",
+
+            "3d":
+                "3D",
+
+            other:
+                "OTHER"
+
+        };
+
+
+        const newAsset = {
+
+            name:
+                assetName.value.trim(),
+
+            type:
+                assetType.value,
+
+            software:
+                assetSoftware.value,
+
+            author:
+                assetAuthor.value.trim() || null,
+
+            description:
+                assetDescription.value.trim() || null,
+
+            notes:
+                assetNotes.value.trim() || null,
+
+            tags,
+
+            preview:
+                assetPreview.value.trim() || null,
+
+            gallery: [],
+
+            source:
+                assetSource.value.trim() || null,
+
+            download:
+                assetDownload.value.trim() || null,
+
+            typeLabel:
+            getTypeLabel(
+                assetType.value,
+                assetSoftware.value
+    ),
+
+        };
+
+
+        const {
+            data,
+            error
+        } = await supabaseClient
+            .from("assets")
+            .insert(newAsset)
+            .select()
+            .single();
+
+
+        if (error) {
+
+            console.error(
+                "Failed to add asset:",
+                error
+            );
+
+
+            addAssetStatus.textContent =
+                "FAILED TO SAVE ASSET.";
+
+            return;
+
+        }
+
+
+        assets.push(data);
+
+
+        updateTagFilter();
+
+        renderAssets();
+
+
+        addAssetStatus.textContent =
+            "ASSET SAVED.";
+
+
+        setTimeout(
+            () => {
+
+                addAssetModal.classList.remove(
+                    "open"
+                );
+
+            },
+            500
+        );
 
     }
 );
