@@ -793,9 +793,27 @@ const assetNotes =
     );
 
 
-const assetTags =
+const selectedTags =
     document.getElementById(
-        "assetTags"
+        "selectedTags"
+    );
+
+
+const tagInput =
+    document.getElementById(
+        "tagInput"
+    );
+
+
+const addTagButton =
+    document.getElementById(
+        "addTagButton"
+    );
+
+
+const tagSuggestions =
+    document.getElementById(
+        "tagSuggestions"
     );
 
 
@@ -984,6 +1002,16 @@ const archiveSubtitle =
 
         addAssetForm.reset();
 
+        selectedTagValues = [];
+
+        renderSelectedTags();
+        
+        tagSuggestions.innerHTML = "";
+        
+        tagSuggestions.classList.remove(
+            "open"
+        );
+
         addAssetModal.classList.add(
             "open"
         );
@@ -1015,6 +1043,351 @@ addAssetModal.addEventListener(
         ) {
 
             addAssetModal.classList.remove(
+                "open"
+            );
+
+        }
+
+    }
+);
+    let selectedTagValues = [];
+
+
+function getAllExistingTags() {
+
+    const tagSet =
+        new Set();
+
+
+    assets.forEach(asset => {
+
+        (asset.tags || []).forEach(tag => {
+
+            const normalized =
+                tag.trim().toLowerCase();
+
+
+            if (normalized) {
+                tagSet.add(normalized);
+            }
+
+        });
+
+    });
+
+
+    return Array.from(tagSet)
+        .sort((a, b) =>
+            a.localeCompare(b)
+        );
+
+}
+
+
+
+function renderSelectedTags() {
+
+    selectedTags.innerHTML = "";
+
+
+    selectedTagValues.forEach(tag => {
+
+        const chip =
+            document.createElement("span");
+
+
+        chip.className =
+            "selected-tag";
+
+
+        chip.textContent =
+            tag;
+
+
+        const removeButton =
+            document.createElement("button");
+
+
+        removeButton.className =
+            "selected-tag-remove";
+
+
+        removeButton.type =
+            "button";
+
+
+        removeButton.textContent =
+            "×";
+
+
+        removeButton.addEventListener(
+            "click",
+            () => {
+
+                selectedTagValues =
+                    selectedTagValues.filter(
+                        item => item !== tag
+                    );
+
+
+                renderSelectedTags();
+
+                renderTagSuggestions();
+
+            }
+        );
+
+
+        chip.appendChild(
+            removeButton
+        );
+
+
+        selectedTags.appendChild(
+            chip
+        );
+
+    });
+
+}
+
+
+
+function addTag(tag) {
+
+    const normalized =
+        tag
+            .trim()
+            .toLowerCase();
+
+
+    if (!normalized) {
+        return;
+    }
+
+
+    if (
+        selectedTagValues.includes(
+            normalized
+        )
+    ) {
+
+        tagInput.value = "";
+
+        renderTagSuggestions();
+
+        return;
+
+    }
+
+
+    selectedTagValues.push(
+        normalized
+    );
+
+
+    tagInput.value = "";
+
+
+    renderSelectedTags();
+
+    renderTagSuggestions();
+
+}
+
+
+
+function renderTagSuggestions() {
+
+    const query =
+        tagInput.value
+            .trim()
+            .toLowerCase();
+
+
+    const existingTags =
+        getAllExistingTags();
+
+
+    const matches =
+        existingTags.filter(tag =>
+            tag.includes(query) &&
+            !selectedTagValues.includes(tag)
+        );
+
+
+    tagSuggestions.innerHTML = "";
+
+
+    if (
+        !query &&
+        matches.length === 0
+    ) {
+
+        tagSuggestions.classList.remove(
+            "open"
+        );
+
+        return;
+
+    }
+
+
+    matches
+        .slice(0, 8)
+        .forEach(tag => {
+
+            const button =
+                document.createElement("button");
+
+
+            button.type =
+                "button";
+
+
+            button.className =
+                "tag-suggestion";
+
+
+            button.innerHTML = `
+                <span>#${tag.toUpperCase()}</span>
+            `;
+
+
+            button.addEventListener(
+                "click",
+                () => {
+
+                    addTag(tag);
+
+                }
+            );
+
+
+            tagSuggestions.appendChild(
+                button
+            );
+
+        });
+
+
+    const exactMatch =
+        existingTags.includes(query);
+
+
+    if (
+        query &&
+        !exactMatch &&
+        !selectedTagValues.includes(query)
+    ) {
+
+        const createButton =
+            document.createElement("button");
+
+
+        createButton.type =
+            "button";
+
+
+        createButton.className =
+            "tag-suggestion tag-suggestion-create";
+
+
+        createButton.innerHTML = `
+            <span>+ CREATE #${query.toUpperCase()}</span>
+        `;
+
+
+        createButton.addEventListener(
+            "click",
+            () => {
+
+                addTag(query);
+
+            }
+        );
+
+
+        tagSuggestions.appendChild(
+            createButton
+        );
+
+    }
+
+
+    if (
+        tagSuggestions.children.length > 0
+    ) {
+
+        tagSuggestions.classList.add(
+            "open"
+        );
+
+    } else {
+
+        tagSuggestions.classList.remove(
+            "open"
+        );
+
+    }
+
+}
+
+
+
+tagInput.addEventListener(
+    "input",
+    renderTagSuggestions
+);
+
+
+
+tagInput.addEventListener(
+    "keydown",
+    event => {
+
+        if (
+            event.key === "Enter"
+        ) {
+
+            event.preventDefault();
+
+
+            addTag(
+                tagInput.value
+            );
+
+        }
+
+    }
+);
+
+
+
+addTagButton.addEventListener(
+    "click",
+    () => {
+
+        addTag(
+            tagInput.value
+        );
+
+    }
+);
+
+
+
+document.addEventListener(
+    "click",
+    event => {
+
+        if (
+            !event.target.closest(
+                ".tag-editor"
+            )
+        ) {
+
+            tagSuggestions.classList.remove(
                 "open"
             );
 
@@ -2065,13 +2438,8 @@ logoutButton.addEventListener(
             "SAVING...";
 
 
-        const tags =
-            assetTags.value
-                .split(",")
-                .map(tag =>
-                    tag.trim().toLowerCase()
-                )
-                .filter(Boolean);
+       const tags =
+    [...selectedTagValues];
 
 
         const typeLabels = {
