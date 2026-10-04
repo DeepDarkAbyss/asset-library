@@ -437,6 +437,242 @@
 
 </div>
 
+    <div
+    class="modal"
+    id="addAssetModal"
+>
+
+    <div class="modal-window add-asset-window">
+
+        <div class="modal-header">
+
+            <span class="modal-label">
+                ADD ASSET
+            </span>
+
+            <button
+                class="close-button"
+                id="closeAddAssetModal"
+                type="button"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <div class="add-asset-content">
+
+            <form id="addAssetForm">
+
+
+                <div class="form-row">
+
+                    <label class="form-label">
+
+                        NAME
+
+                        <input
+                            class="form-input"
+                            id="assetName"
+                            type="text"
+                            required
+                        >
+
+                    </label>
+
+
+                    <label class="form-label">
+
+                        AUTHOR
+
+                        <input
+                            class="form-input"
+                            id="assetAuthor"
+                            type="text"
+                        >
+
+                    </label>
+
+                </div>
+
+
+                <div class="form-row">
+
+                    <label class="form-label">
+
+                        TYPE
+
+                        <select
+                            class="form-input"
+                            id="assetType"
+                        >
+
+                            <option value="brush">
+                                BRUSH
+                            </option>
+
+                            <option value="material">
+                                MATERIAL
+                            </option>
+
+                            <option value="texture">
+                                TEXTURE
+                            </option>
+
+                            <option value="3d">
+                                3D
+                            </option>
+
+                            <option value="other">
+                                OTHER
+                            </option>
+
+                        </select>
+
+                    </label>
+
+
+                    <label class="form-label">
+
+                        SOFTWARE
+
+                        <select
+                            class="form-input"
+                            id="assetSoftware"
+                        >
+
+                            <option value="csp">
+                                CLIP STUDIO PAINT
+                            </option>
+
+                            <option value="ps">
+                                PHOTOSHOP
+                            </option>
+
+                            <option value="other">
+                                OTHER
+                            </option>
+
+                        </select>
+
+                    </label>
+
+                </div>
+
+
+                <label class="form-label">
+
+                    DESCRIPTION
+
+                    <textarea
+                        class="form-textarea"
+                        id="assetDescription"
+                        rows="5"
+                    ></textarea>
+
+                </label>
+
+
+                <label class="form-label">
+
+                    NOTES
+
+                    <textarea
+                        class="form-textarea"
+                        id="assetNotes"
+                        rows="4"
+                    ></textarea>
+
+                </label>
+
+
+                <label class="form-label">
+
+                    TAGS
+
+                    <input
+                        class="form-input"
+                        id="assetTags"
+                        type="text"
+                        placeholder="pencil, sketch, soft, decor"
+                    >
+
+                    <span class="form-help">
+                        Separate tags with commas.
+                    </span>
+
+                </label>
+
+
+                <label class="form-label">
+
+                    PREVIEW IMAGE URL
+
+                    <input
+                        class="form-input"
+                        id="assetPreview"
+                        type="url"
+                        placeholder="https://..."
+                    >
+
+                </label>
+
+
+                <div class="form-row">
+
+                    <label class="form-label">
+
+                        SOURCE LINK
+
+                        <input
+                            class="form-input"
+                            id="assetSource"
+                            type="url"
+                            placeholder="https://..."
+                        >
+
+                    </label>
+
+
+                    <label class="form-label">
+
+                        DOWNLOAD LINK
+
+                        <input
+                            class="form-input"
+                            id="assetDownload"
+                            type="url"
+                            placeholder="https://..."
+                        >
+
+                    </label>
+
+                </div>
+
+
+                <p
+                    class="form-status"
+                    id="addAssetStatus"
+                ></p>
+
+
+                <button
+                    class="button save-button"
+                    type="submit"
+                >
+                    SAVE ASSET
+                </button>
+
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
 <script>
 
 
