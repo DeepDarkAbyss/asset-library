@@ -1125,3 +1125,20 @@ main {
     font-family: var(--mono);
     font-size: 9px;
 }
+
+.modal-admin-actions {
+    display: none;
+    margin-top: 30px;
+    padding-top: 22px;
+    border-top: 1px solid var(--border);
+}
+
+.danger-button {
+    color: #b8b8b8;
+}
+
+.danger-button:hover {
+    color: #ffffff;
+    border-color: #777777;
+    background: #1a1a1a;
+}
