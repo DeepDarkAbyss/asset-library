@@ -603,22 +603,47 @@
                 </label>
 
 
-                <label class="form-label">
+             <label class="form-label">
 
-                    TAGS
+    TAGS
 
-                    <input
-                        class="form-input"
-                        id="assetTags"
-                        type="text"
-                        placeholder="pencil, sketch, soft, decor"
-                    >
+    <div class="tag-editor">
 
-                    <span class="form-help">
-                        Separate tags with commas.
-                    </span>
+        <div
+            class="selected-tags"
+            id="selectedTags"
+        ></div>
 
-                </label>
+
+        <div class="tag-input-row">
+
+            <input
+                class="form-input"
+                id="tagInput"
+                type="text"
+                autocomplete="off"
+                placeholder="Type a tag..."
+            >
+
+            <button
+                class="button tag-add-button"
+                id="addTagButton"
+                type="button"
+            >
+                +
+            </button>
+
+        </div>
+
+
+        <div
+            class="tag-suggestions"
+            id="tagSuggestions"
+        ></div>
+
+    </div>
+
+</label>
 
 
                 <label class="form-label">
