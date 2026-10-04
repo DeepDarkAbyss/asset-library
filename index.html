@@ -1700,7 +1700,14 @@ async function loadAssets() {
 
 
         assets =
-            data || [];
+    (data || []).map(asset => ({
+        ...asset,
+        typeLabel:
+            getTypeLabel(
+                asset.type,
+                asset.software
+            )
+    }));
 
 
         updateTagFilter();
@@ -2771,11 +2778,6 @@ addAssetForm.addEventListener(
             software:
                 assetSoftware.value,
 
-            typeLabel:
-                getTypeLabel(
-                    assetType.value,
-                    assetSoftware.value
-                ),
 
             author:
                 assetAuthor.value.trim() ||
@@ -2844,8 +2846,14 @@ addAssetForm.addEventListener(
 
                 if (index !== -1) {
 
-                    assets[index] =
-                        data;
+                    assets[index] = {
+                        ...data,
+                        typeLabel:
+                            getTypeLabel(
+                                data.type,
+                                data.software
+                            )
+                    };
 
                 }
 
@@ -2882,7 +2890,14 @@ addAssetForm.addEventListener(
                 }
 
 
-                assets.push(data);
+                assets.push({
+                    ...data,
+                    typeLabel:
+                        getTypeLabel(
+                            data.type,
+                            data.software
+                        )
+                });
 
 
                 addAssetStatus.textContent =
