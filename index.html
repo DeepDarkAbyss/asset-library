@@ -83,14 +83,30 @@
 
     <div class="top-actions">
 
-        <button
-            class="button"
-            id="addButton"
-        >
-            + ADD ASSET
-        </button>
+    <button
+        class="button"
+        id="loginButton"
+    >
+        LOGIN
+    </button>
 
-    </div>
+    <button
+        class="button"
+        id="logoutButton"
+        style="display: none;"
+    >
+        LOG OUT
+    </button>
+
+    <button
+        class="button"
+        id="addButton"
+        style="display: none;"
+    >
+        + ADD ASSET
+    </button>
+
+</div>
 
 
 </header>
@@ -347,6 +363,79 @@
 
 </div>
 
+    <div
+    class="modal"
+    id="loginModal"
+>
+
+    <div class="modal-window login-window">
+
+        <div class="modal-header">
+
+            <span class="modal-label">
+                ADMIN ACCESS
+            </span>
+
+            <button
+                class="close-button"
+                id="closeLoginModal"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <div class="login-content">
+
+            <form id="loginForm">
+
+                <label class="form-label">
+                    EMAIL
+
+                    <input
+                        class="form-input"
+                        id="loginEmail"
+                        type="email"
+                        autocomplete="email"
+                        required
+                    >
+                </label>
+
+
+                <label class="form-label">
+                    PASSWORD
+
+                    <input
+                        class="form-input"
+                        id="loginPassword"
+                        type="password"
+                        autocomplete="current-password"
+                        required
+                    >
+                </label>
+
+
+                <p
+                    class="login-status"
+                    id="loginStatus"
+                ></p>
+
+
+                <button
+                    class="button login-submit"
+                    type="submit"
+                >
+                    SIGN IN
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
 
 <script>
 
