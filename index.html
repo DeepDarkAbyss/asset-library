@@ -768,6 +768,16 @@ let activeTag = new URLSearchParams(
     window.location.search
 ).get("tag");
 
+let currentAsset = null;
+
+let editingAssetId = null;
+
+let currentSession = null;
+
+
+const ADMIN_USER_ID =
+    "09cc9469-afb8-4733-b682-9b8c3d136b09";
+
 
 if (activeTag) {
 
@@ -961,6 +971,35 @@ const modalTags =
         "modalTags"
     );
 
+    const modalAdminActions =
+    document.getElementById(
+        "modalAdminActions"
+    );
+
+
+const editAssetButton =
+    document.getElementById(
+        "editAssetButton"
+    );
+
+
+const deleteAssetButton =
+    document.getElementById(
+        "deleteAssetButton"
+    );
+
+
+const addAssetModalLabel =
+    document.getElementById(
+        "addAssetModalLabel"
+    );
+
+
+const saveAssetButton =
+    document.getElementById(
+        "saveAssetButton"
+    );
+
 
 const sourceButton =
     document.getElementById(
@@ -1037,27 +1076,228 @@ const archiveSubtitle =
         "archiveSubtitle"
     );
 
-    addButton.addEventListener(
+    deleteAssetButton.addEventListener(
+    "click",
+    async () => {
+
+        if (!currentAsset) {
+            return;
+        }
+
+
+        const confirmed =
+            window.confirm(
+                `Delete "${currentAsset.name}"?`
+            );
+
+
+        if (!confirmed) {
+            return;
+        }
+
+
+        deleteAssetButton.disabled =
+            true;
+
+
+        deleteAssetButton.textContent =
+            "DELETING...";
+
+
+        const {
+            error
+        } = await supabaseClient
+            .from("assets")
+            .delete()
+            .eq(
+                "id",
+                currentAsset.id
+            );
+
+
+        if (error) {
+
+            console.error(
+                "Failed to delete asset:",
+                error
+            );
+
+
+            alert(
+                "FAILED TO DELETE ASSET."
+            );
+
+
+            deleteAssetButton.disabled =
+                false;
+
+            deleteAssetButton.textContent =
+                "DELETE";
+
+            return;
+
+        }
+
+
+        assets =
+            assets.filter(
+                asset =>
+                    asset.id !==
+                    currentAsset.id
+            );
+
+
+        closeAssetModal();
+
+
+        updateTagFilter();
+
+        renderAssets();
+
+
+        deleteAssetButton.disabled =
+            false;
+
+        deleteAssetButton.textContent =
+            "DELETE";
+
+    }
+);
+    
+    editAssetButton.addEventListener(
     "click",
     () => {
 
-        addAssetStatus.textContent = "";
+        if (!currentAsset) {
+            return;
+        }
 
-        addAssetForm.reset();
 
-        selectedTagValues = [];
+        const asset =
+            currentAsset;
+
+
+        editingAssetId =
+            asset.id;
+
+
+        assetName.value =
+            asset.name || "";
+
+
+        assetAuthor.value =
+            asset.author || "";
+
+
+        assetType.value =
+            asset.type || "brush";
+
+
+        assetSoftware.value =
+            asset.software || "csp";
+
+
+        assetDescription.value =
+            asset.description || "";
+
+
+        assetNotes.value =
+            asset.notes || "";
+
+
+        assetPreview.value =
+            asset.preview || "";
+
+
+        assetSource.value =
+            asset.source || "";
+
+
+        assetDownload.value =
+            asset.download || "";
+
+
+        selectedTagValues =
+            [...(asset.tags || [])];
+
 
         renderSelectedTags();
-        
+
+
+        tagInput.value = "";
+
+
         tagSuggestions.innerHTML = "";
-        
+
         tagSuggestions.classList.remove(
             "open"
         );
 
+
+        addAssetModalLabel.textContent =
+            "EDIT ASSET";
+
+
+        saveAssetButton.textContent =
+            "SAVE CHANGES";
+
+
+        addAssetStatus.textContent =
+            "";
+
+
+        closeAssetModal();
+
+
         addAssetModal.classList.add(
             "open"
         );
+
+
+        assetName.focus();
+
+    }
+);
+
+    addButton.addEventListener(
+    "click",
+    () => {
+
+        editingAssetId =
+            null;
+
+
+        addAssetForm.reset();
+
+
+        selectedTagValues = [];
+
+        renderSelectedTags();
+
+
+        tagSuggestions.innerHTML = "";
+
+        tagSuggestions.classList.remove(
+            "open"
+        );
+
+
+        addAssetModalLabel.textContent =
+            "ADD ASSET";
+
+
+        saveAssetButton.textContent =
+            "SAVE ASSET";
+
+
+        addAssetStatus.textContent =
+            "";
+
+
+        addAssetModal.classList.add(
+            "open"
+        );
+
 
         assetName.focus();
 
@@ -1927,6 +2167,8 @@ function renderAssets() {
 
 function openModal(asset) {
 
+    currentAsset = asset;
+
     modalTitle.textContent =
         asset.name;
 
@@ -2120,6 +2362,15 @@ galleryImages
         "open"
     );
 
+    modalAdminActions.style.display =
+    (
+        currentSession &&
+        currentSession.user &&
+        currentSession.user.id === ADMIN_USER_ID
+    )
+        ? "block"
+        : "none";
+
 }
 
 
@@ -2129,6 +2380,11 @@ function closeAssetModal() {
     modal.classList.remove(
         "open"
     );
+
+    currentAsset = null;
+
+    modalAdminActions.style.display =
+        "none";
 
 }
 
@@ -2225,11 +2481,18 @@ document.addEventListener(
 
 function updateAuthUI(session) {
 
-    const loggedIn =
-        Boolean(session);
+    currentSession = session;
 
 
-    if (loggedIn) {
+    const isAdmin =
+        Boolean(
+            session &&
+            session.user &&
+            session.user.id === ADMIN_USER_ID
+        );
+
+
+    if (isAdmin) {
 
         loginButton.style.display =
             "none";
@@ -2252,6 +2515,15 @@ function updateAuthUI(session) {
             "none";
 
     }
+
+
+    modalAdminActions.style.display =
+        (
+            currentAsset &&
+            isAdmin
+        )
+            ? "block"
+            : "none";
 
 }
 
@@ -2473,7 +2745,7 @@ logoutButton.addEventListener(
 
 }
 
-    addAssetForm.addEventListener(
+addAssetForm.addEventListener(
     "submit",
     async event => {
 
@@ -2484,28 +2756,8 @@ logoutButton.addEventListener(
             "SAVING...";
 
 
-       const tags =
-    [...selectedTagValues];
-
-
-        const typeLabels = {
-
-            brush:
-                "CLIP STUDIO PAINT / BRUSH",
-
-            material:
-                "CLIP STUDIO PAINT / MATERIAL",
-
-            texture:
-                "PHOTOSHOP / TEXTURE",
-
-            "3d":
-                "3D",
-
-            other:
-                "OTHER"
-
-        };
+        const tags =
+            [...selectedTagValues];
 
 
         const newAsset = {
@@ -2519,51 +2771,159 @@ logoutButton.addEventListener(
             software:
                 assetSoftware.value,
 
+            typeLabel:
+                getTypeLabel(
+                    assetType.value,
+                    assetSoftware.value
+                ),
+
             author:
-                assetAuthor.value.trim() || null,
+                assetAuthor.value.trim() ||
+                null,
 
             description:
-                assetDescription.value.trim() || null,
+                assetDescription.value.trim() ||
+                null,
 
             notes:
-                assetNotes.value.trim() || null,
+                assetNotes.value.trim() ||
+                null,
 
             tags,
 
             preview:
-                assetPreview.value.trim() || null,
-
-            gallery: [],
+                assetPreview.value.trim() ||
+                null,
 
             source:
-                assetSource.value.trim() || null,
+                assetSource.value.trim() ||
+                null,
 
             download:
-                assetDownload.value.trim() || null,
-
-            typeLabel:
-            getTypeLabel(
-                assetType.value,
-                assetSoftware.value
-    ),
+                assetDownload.value.trim() ||
+                null
 
         };
 
 
-        const {
-            data,
-            error
-        } = await supabaseClient
-            .from("assets")
-            .insert(newAsset)
-            .select()
-            .single();
+        try {
 
 
-        if (error) {
+            /* =========================
+               EDIT EXISTING ASSET
+               ========================= */
+
+            if (editingAssetId !== null) {
+
+                const {
+                    data,
+                    error
+                } = await supabaseClient
+                    .from("assets")
+                    .update(newAsset)
+                    .eq(
+                        "id",
+                        editingAssetId
+                    )
+                    .select()
+                    .single();
+
+
+                if (error) {
+                    throw error;
+                }
+
+
+                const index =
+                    assets.findIndex(
+                        asset =>
+                            asset.id ===
+                            editingAssetId
+                    );
+
+
+                if (index !== -1) {
+
+                    assets[index] =
+                        data;
+
+                }
+
+
+                addAssetStatus.textContent =
+                    "ASSET UPDATED.";
+
+
+            }
+
+
+            /* =========================
+               CREATE NEW ASSET
+               ========================= */
+
+            else {
+
+                newAsset.gallery =
+                    [];
+
+
+                const {
+                    data,
+                    error
+                } = await supabaseClient
+                    .from("assets")
+                    .insert(newAsset)
+                    .select()
+                    .single();
+
+
+                if (error) {
+                    throw error;
+                }
+
+
+                assets.push(data);
+
+
+                addAssetStatus.textContent =
+                    "ASSET SAVED.";
+
+            }
+
+
+            updateTagFilter();
+
+            renderAssets();
+
+
+            editingAssetId =
+                null;
+
+
+            addAssetModalLabel.textContent =
+                "ADD ASSET";
+
+
+            saveAssetButton.textContent =
+                "SAVE ASSET";
+
+
+            setTimeout(
+                () => {
+
+                    addAssetModal.classList.remove(
+                        "open"
+                    );
+
+                },
+                500
+            );
+
+
+        } catch (error) {
 
             console.error(
-                "Failed to add asset:",
+                "Failed to save asset:",
                 error
             );
 
@@ -2571,33 +2931,7 @@ logoutButton.addEventListener(
             addAssetStatus.textContent =
                 "FAILED TO SAVE ASSET.";
 
-            return;
-
         }
-
-
-        assets.push(data);
-
-
-        updateTagFilter();
-
-        renderAssets();
-
-
-        addAssetStatus.textContent =
-            "ASSET SAVED.";
-
-
-        setTimeout(
-            () => {
-
-                addAssetModal.classList.remove(
-                    "open"
-                );
-
-            },
-            500
-        );
 
     }
 );
