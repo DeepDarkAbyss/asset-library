@@ -1402,7 +1402,212 @@ document.addEventListener(
     }
 );
 
+function updateAuthUI(session) {
 
+    const loggedIn =
+        Boolean(session);
+
+
+    if (loggedIn) {
+
+        loginButton.style.display =
+            "none";
+
+        logoutButton.style.display =
+            "inline-flex";
+
+        addButton.style.display =
+            "inline-flex";
+
+    } else {
+
+        loginButton.style.display =
+            "inline-flex";
+
+        logoutButton.style.display =
+            "none";
+
+        addButton.style.display =
+            "none";
+
+    }
+
+}
+
+
+
+async function initializeAuth() {
+
+    const {
+        data,
+        error
+    } = await supabaseClient.auth.getSession();
+
+
+    if (error) {
+
+        console.error(
+            "Failed to get session:",
+            error
+        );
+
+        updateAuthUI(null);
+
+        return;
+
+    }
+
+
+    updateAuthUI(
+        data.session
+    );
+
+
+    supabaseClient.auth.onAuthStateChange(
+        (event, session) => {
+
+            updateAuthUI(
+                session
+            );
+
+        }
+    );
+
+}
+
+
+
+loginButton.addEventListener(
+    "click",
+    () => {
+
+        loginStatus.textContent = "";
+
+        loginModal.classList.add(
+            "open"
+        );
+
+        loginEmail.focus();
+
+    }
+);
+
+
+
+closeLoginModal.addEventListener(
+    "click",
+    () => {
+
+        loginModal.classList.remove(
+            "open"
+        );
+
+    }
+);
+
+
+
+loginModal.addEventListener(
+    "click",
+    event => {
+
+        if (
+            event.target === loginModal
+        ) {
+
+            loginModal.classList.remove(
+                "open"
+            );
+
+        }
+
+    }
+);
+
+
+
+loginForm.addEventListener(
+    "submit",
+    async event => {
+
+        event.preventDefault();
+
+
+        loginStatus.textContent =
+            "SIGNING IN...";
+
+
+        const email =
+            loginEmail.value.trim();
+
+
+        const password =
+            loginPassword.value;
+
+
+        const {
+            error
+        } = await supabaseClient.auth.signInWithPassword({
+
+            email,
+            password
+
+        });
+
+
+        if (error) {
+
+            console.error(
+                error
+            );
+
+
+            loginStatus.textContent =
+                "INVALID EMAIL OR PASSWORD.";
+
+            return;
+
+        }
+
+
+        loginStatus.textContent =
+            "";
+
+
+        loginPassword.value = "";
+
+
+        loginModal.classList.remove(
+            "open"
+        );
+
+    }
+);
+
+
+
+logoutButton.addEventListener(
+    "click",
+    async () => {
+
+        const {
+            error
+        } = await supabaseClient.auth.signOut();
+
+
+        if (error) {
+
+            console.error(
+                "Logout failed:",
+                error
+            );
+
+        }
+
+    }
+);
+
+initializeAuth();
 
 loadAssets();
 
