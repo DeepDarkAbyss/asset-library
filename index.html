@@ -2246,6 +2246,37 @@ function clearActiveTag() {
 
 function renderAssets() {
 
+    const chronologicalAssets =
+    [...assets].sort((a, b) => {
+
+        const dateDifference =
+            new Date(a.created_at) -
+            new Date(b.created_at);
+
+        if (dateDifference !== 0) {
+            return dateDifference;
+        }
+
+        return a.id - b.id;
+
+    });
+
+
+const assetNumbers =
+    new Map();
+
+
+chronologicalAssets.forEach(
+    (asset, index) => {
+
+        assetNumbers.set(
+            asset.id,
+            index + 1
+        );
+
+    }
+);
+    
     const search =
         searchInput.value
             .trim()
@@ -2334,7 +2365,7 @@ function renderAssets() {
 
 
 
-    filtered.forEach((asset, index) => {
+    filtered.forEach(asset => {
 
 
         const card =
@@ -2437,14 +2468,14 @@ function renderAssets() {
             "asset-count";
 
 
-        count.textContent =
-            "#" +
-            String(index + 1)
-                .padStart(
-                    3,
-                    "0"
-                );
-
+          count.textContent =
+        "#" +
+        String(
+            assetNumbers.get(asset.id)
+        ).padStart(
+            3,
+            "0"
+        );
 
 
         footer.appendChild(
