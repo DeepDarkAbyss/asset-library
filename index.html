@@ -1350,6 +1350,8 @@ const archiveSubtitle =
 
         renderSelectedTags();
 
+        renderRecentTags();
+
 
         tagSuggestions.innerHTML = "";
 
@@ -1454,10 +1456,8 @@ function renderSelectedTags() {
         const chip =
             document.createElement("span");
 
-
         chip.className =
             "selected-tag";
-
 
         chip.textContent =
             tag;
@@ -1466,14 +1466,11 @@ function renderSelectedTags() {
         const removeButton =
             document.createElement("button");
 
-
         removeButton.className =
             "selected-tag-remove";
 
-
         removeButton.type =
             "button";
-
 
         removeButton.textContent =
             "×";
@@ -1481,7 +1478,11 @@ function renderSelectedTags() {
 
         removeButton.addEventListener(
             "click",
-            () => {
+            event => {
+
+                event.preventDefault();
+                event.stopPropagation();
+
 
                 selectedTagValues =
                     selectedTagValues.filter(
@@ -1490,7 +1491,6 @@ function renderSelectedTags() {
 
 
                 renderSelectedTags();
-
                 renderTagSuggestions();
 
             }
@@ -1599,27 +1599,21 @@ function renderRecentTags() {
         getRecentTags();
 
 
-    if (recent.length === 0) {
+    if (
+        !Array.isArray(recent) ||
+        recent.length === 0
+    ) {
 
-        const empty =
-            document.createElement("span");
-
-
-        empty.className =
-            "recent-tags-empty";
-
-
-        empty.textContent =
-            "NO RECENT TAGS";
-
-
-        recentTags.appendChild(
-            empty
-        );
+        recentTags.style.display =
+            "none";
 
         return;
 
     }
+
+
+    recentTags.style.display =
+        "flex";
 
 
     recent.forEach(tag => {
@@ -1627,14 +1621,11 @@ function renderRecentTags() {
         const button =
             document.createElement("button");
 
-
         button.type =
             "button";
 
-
         button.className =
             "recent-tag";
-
 
         button.textContent =
             `#${tag}`;
@@ -1642,7 +1633,11 @@ function renderRecentTags() {
 
         button.addEventListener(
             "click",
-            () => {
+            event => {
+
+                event.preventDefault();
+                event.stopPropagation();
+
 
                 addTag(tag);
 
