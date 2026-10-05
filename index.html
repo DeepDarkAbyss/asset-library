@@ -199,6 +199,27 @@
             3D
         </button>
 
+        <button
+            class="filter-button"
+            data-filter="gradient"
+        >
+            GRADIENTS
+        </button>
+        
+        <button
+            class="filter-button"
+            data-filter="autoaction"
+        >
+            AUTO ACTIONS
+        </button>
+        
+        <button
+            class="filter-button"
+            data-filter="other"
+        >
+            OTHER
+        </button>
+
 
         <select
     class="filter-select"
@@ -575,19 +596,27 @@
                             <option value="brush">
                                 BRUSH
                             </option>
-
+                            
                             <option value="material">
                                 MATERIAL
                             </option>
-
+                            
                             <option value="texture">
                                 TEXTURE
                             </option>
-
+                            
                             <option value="3d">
                                 3D
                             </option>
-
+                            
+                            <option value="gradient">
+                                GRADIENT
+                            </option>
+                            
+                            <option value="autoaction">
+                                AUTO ACTION
+                            </option>
+                            
                             <option value="other">
                                 OTHER
                             </option>
@@ -3055,22 +3084,28 @@ logoutButton.addEventListener(
 
 
     const typeLabels = {
-
+    
         brush:
             "BRUSH",
-
+    
         material:
             "MATERIAL",
-
+    
         texture:
             "TEXTURE",
-
+    
         "3d":
             "3D",
-
+    
+        gradient:
+            "GRADIENT",
+    
+        autoaction:
+            "AUTO ACTION",
+    
         other:
             "OTHER"
-
+    
     };
 
 
