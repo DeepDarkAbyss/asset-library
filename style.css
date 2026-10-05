@@ -37,7 +37,13 @@ input,
 select,
 textarea {
     font: inherit;
-    cursor: url("cursor2.png") 4 4, pointer;
+}
+
+a,
+button,
+input,
+select {
+    cursor: url("cursor2.png") 4 4, auto;
 }
 
 button {
