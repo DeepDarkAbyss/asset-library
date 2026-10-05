@@ -768,6 +768,19 @@ let activeTag = new URLSearchParams(
     window.location.search
 ).get("tag");
 
+    let activeAuthor =
+    new URLSearchParams(
+        window.location.search
+    ).get("author");
+
+
+if (activeAuthor) {
+
+    activeAuthor =
+        activeAuthor.trim().toLowerCase();
+
+}
+
 let currentAsset = null;
 
 let editingAssetId = null;
@@ -1961,12 +1974,21 @@ function renderAssets() {
                         activeTag
                 );
 
+            const matchesAuthor =
+                !activeAuthor ||
+                (
+                    asset.author &&
+                    asset.author.trim().toLowerCase() ===
+                    activeAuthor
+                );
 
-            const searchable = [
+
+           const searchable = [
                 asset.name,
                 asset.description,
                 asset.typeLabel,
                 asset.software,
+                asset.author,
                 ...asset.tags
             ]
                 .join(" ")
@@ -1983,6 +2005,7 @@ function renderAssets() {
                 matchesType &&
                 matchesSoftware &&
                 matchesTag &&
+                matchesAuthor &&
                 matchesSearch
             );
 
@@ -2186,16 +2209,44 @@ function openModal(asset) {
 
     modalDescription.textContent =
         asset.description;
-    modalAuthor.textContent =
-    asset.author
-        ? `BY ${asset.author.toUpperCase()}`
-        : "";
+    modalAuthor.innerHTML = "";
 
-modalAuthor.style.display =
-    asset.author
-        ? "block"
-        : "none";
+if (asset.author) {
 
+    const authorLink =
+        document.createElement("a");
+
+    authorLink.className =
+        "author-link";
+
+    authorLink.href =
+        `index.html?author=${encodeURIComponent(
+            asset.author
+        )}`;
+
+    authorLink.textContent =
+        `BY ${asset.author.toUpperCase()}`;
+
+    authorLink.addEventListener(
+        "click",
+        event => {
+            event.stopPropagation();
+        }
+    );
+
+    modalAuthor.appendChild(
+        authorLink
+    );
+
+    modalAuthor.style.display =
+        "block";
+
+} else {
+
+    modalAuthor.style.display =
+        "none";
+
+}
 
 if (asset.notes) {
 
