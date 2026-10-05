@@ -1230,3 +1230,46 @@ main {
     display: flex;
     flex-direction: column;
 }
+
+.tag-group {
+    margin-bottom: 34px;
+}
+
+.tag-group-title {
+    margin: 0 0 10px;
+
+    color: #eeeeee;
+
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 500;
+
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+}
+
+.tag-group-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+}
+
+.tag-group-list .tag-index-item {
+    min-height: 52px;
+}
+
+@media (max-width: 900px) {
+
+    .tag-group-list {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+
+@media (max-width: 550px) {
+
+    .tag-group-list {
+        grid-template-columns: 1fr;
+    }
+
+}
