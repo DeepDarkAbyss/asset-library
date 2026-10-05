@@ -1887,8 +1887,8 @@ async function loadAssets() {
         } = await supabaseClient
             .from("assets")
             .select("*")
-            .order("id", {
-                ascending: true
+            .order("created_at", {
+                ascending: false
             });
 
 
