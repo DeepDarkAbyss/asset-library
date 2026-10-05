@@ -1277,3 +1277,44 @@ main {
     }
 
 }
+
+.link-check {
+    display: none;
+
+    margin-top: 7px;
+    padding: 9px 11px;
+
+    border: 1px solid #4a4a4a;
+    background: #151515;
+
+    color: #aaa;
+
+    font-family: var(--sans);
+    font-size: 10px;
+    line-height: 1.5;
+}
+
+.link-check.visible {
+    display: block;
+}
+
+.link-check.duplicate {
+    border-color: #666;
+    color: #d0d0d0;
+}
+
+.link-check-label {
+    display: block;
+
+    margin-bottom: 2px;
+
+    font-family: var(--mono);
+    font-size: 8px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.link-check-name {
+    color: #fff;
+    font-weight: 600;
+}
