@@ -2127,7 +2127,7 @@ function renderAssets() {
 
 
 
-    filtered.forEach(asset => {
+    filtered.forEach((asset, index) => {
 
 
         const card =
@@ -2232,7 +2232,7 @@ function renderAssets() {
 
         count.textContent =
             "#" +
-            String(asset.id)
+            String(index + 1)
                 .padStart(
                     3,
                     "0"
