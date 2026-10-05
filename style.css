@@ -1039,6 +1039,10 @@ main {
     line-height: 1;
 }
 
+.selected-tag-remove:focus {
+    outline: none;
+}
+
 .selected-tag-remove:hover {
     color: #fff;
 }
