@@ -1142,3 +1142,14 @@ main {
     border-color: #777777;
     background: #1a1a1a;
 }
+
+.author-link {
+    color: #999999;
+    text-decoration: none;
+
+    transition: color 0.15s ease;
+}
+
+.author-link:hover {
+    color: #ffffff;
+}
