@@ -46,7 +46,7 @@ input,
 textarea,
 select,
 [role="button"] {
-    cursor: url("cursor2.png") 4 4, pointer;
+    cursor: url("cursor2.png") 4 4, auto;
 }
 
 /* Обычный текст */
