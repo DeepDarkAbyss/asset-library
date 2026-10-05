@@ -129,38 +129,214 @@ async function loadTags() {
 
         (data || []).forEach(asset => {
 
-            (asset.tags || []).forEach(tag => {
+            (asset.tags || []).forEach(rawTag => {
 
-                const normalized =
-                    tag.trim().toLowerCase();
+                const tag =
+                    rawTag
+                        .trim()
+                        .toLowerCase();
 
 
-                if (!normalized) {
+                if (!tag) {
                     return;
                 }
 
 
-                tagCounts[normalized] =
-                    (tagCounts[normalized] || 0) + 1;
+                tagCounts[tag] =
+                    (tagCounts[tag] || 0) + 1;
 
             });
 
         });
 
 
-        const sortedTags =
-            Object.entries(tagCounts)
-                .sort(
-                    (a, b) =>
-                        b[1] - a[1] ||
-                        a[0].localeCompare(b[0])
-                );
+        const groups = {};
+
+
+        Object.entries(tagCounts).forEach(
+            ([tag, count]) => {
+
+                const separatorIndex =
+                    tag.indexOf(":");
+
+
+                let group;
+                let value;
+
+
+                if (separatorIndex !== -1) {
+
+                    group =
+                        tag
+                            .slice(
+                                0,
+                                separatorIndex
+                            )
+                            .trim();
+
+                    value =
+                        tag
+                            .slice(
+                                separatorIndex + 1
+                            )
+                            .trim();
+
+                } else {
+
+                    group =
+                        "uncategorized";
+
+                    value =
+                        tag;
+
+                }
+
+
+                if (!group) {
+                    group = "uncategorized";
+                }
+
+
+                if (!value) {
+                    value = tag;
+                }
+
+
+                if (!groups[group]) {
+
+                    groups[group] = [];
+
+                }
+
+
+                groups[group].push({
+                    fullTag: tag,
+                    value,
+                    count
+                });
+
+            }
+        );
 
 
         container.innerHTML = "";
 
 
-        if (sortedTags.length === 0) {
+        const sortedGroups =
+            Object.entries(groups)
+                .sort(
+                    (a, b) =>
+                        a[0].localeCompare(
+                            b[0]
+                        )
+                );
+
+
+        sortedGroups.forEach(
+            ([group, tags]) => {
+
+                const section =
+                    document.createElement(
+                        "section"
+                    );
+
+
+                section.className =
+                    "tag-group";
+
+
+                const heading =
+                    document.createElement(
+                        "h2"
+                    );
+
+
+                heading.className =
+                    "tag-group-title";
+
+
+                heading.textContent =
+                    group === "uncategorized"
+                        ? "UNCATEGORIZED"
+                        : group.toUpperCase();
+
+
+                section.appendChild(
+                    heading
+                );
+
+
+                const list =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                list.className =
+                    "tag-group-list";
+
+
+                tags
+                    .sort(
+                        (a, b) =>
+                            a.value.localeCompare(
+                                b.value
+                            )
+                    )
+                    .forEach(
+                        tag => {
+
+                            const link =
+                                document.createElement(
+                                    "a"
+                                );
+
+
+                            link.className =
+                                "tag-index-item";
+
+
+                            link.href =
+                                `index.html?tag=${encodeURIComponent(
+                                    tag.fullTag
+                                )}`;
+
+
+                            link.innerHTML = `
+                                <span class="tag-index-name">
+                                    ${tag.value.toUpperCase()}
+                                </span>
+
+                                <span class="tag-index-count">
+                                    ${tag.count}
+                                </span>
+                            `;
+
+
+                            list.appendChild(
+                                link
+                            );
+
+                        }
+                    );
+
+
+                section.appendChild(
+                    list
+                );
+
+
+                container.appendChild(
+                    section
+                );
+
+            }
+        );
+
+
+        if (
+            sortedGroups.length === 0
+        ) {
 
             container.innerHTML = `
                 <div class="no-results">
@@ -168,46 +344,15 @@ async function loadTags() {
                 </div>
             `;
 
-            return;
-
         }
-
-
-        sortedTags.forEach(
-            ([tag, count]) => {
-
-                const link =
-                    document.createElement("a");
-
-
-                link.className =
-                    "tag-index-item";
-
-
-                link.href =
-                    `index.html?tag=${encodeURIComponent(tag)}`;
-
-
-                link.innerHTML = `
-                    <span class="tag-index-name">
-                        #${tag.toUpperCase()}
-                    </span>
-
-                    <span class="tag-index-count">
-                        ${count}
-                    </span>
-                `;
-
-
-                container.appendChild(link);
-
-            }
-        );
 
 
     } catch (error) {
 
-        console.error(error);
+        console.error(
+            "Failed to load tags:",
+            error
+        );
 
 
         container.innerHTML = `
