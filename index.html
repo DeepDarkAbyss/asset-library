@@ -768,6 +768,13 @@ let activeTag = new URLSearchParams(
     window.location.search
 ).get("tag");
 
+    if (activeTag) {
+
+    activeTag =
+        activeTag.trim().toLowerCase();
+
+}
+
     let activeAuthor =
     new URLSearchParams(
         window.location.search
@@ -1847,7 +1854,10 @@ function updateTagFilter() {
     activeTagFilter.innerHTML = "";
 
 
-    if (!activeTag) {
+    if (
+        !activeTag &&
+        !activeAuthor
+    ) {
 
         archiveSubtitle.textContent =
             "Brushes, materials, textures and everything else I refuse to lose.";
@@ -1858,49 +1868,93 @@ function updateTagFilter() {
 
 
     archiveSubtitle.textContent =
-        "Showing assets filtered by tag.";
+        "Showing assets filtered by tag or author.";
 
 
-    const label =
-        document.createElement("span");
+    if (activeTag) {
+
+        const tagLabel =
+            document.createElement("span");
+
+        tagLabel.className =
+            "active-tag-label";
+
+        tagLabel.textContent =
+            `TAG: #${activeTag.toUpperCase()}`;
 
 
-    label.className =
-        "active-tag-label";
+        const clearTag =
+            document.createElement("button");
+
+        clearTag.className =
+            "active-tag-clear";
+
+        clearTag.textContent =
+            "×";
+
+        clearTag.title =
+            "Clear tag filter";
 
 
-    label.textContent =
-        `TAG: #${activeTag.toUpperCase()}`;
+        clearTag.addEventListener(
+            "click",
+            clearActiveTag
+        );
 
 
-    const clear =
-        document.createElement("button");
+        tagLabel.appendChild(
+            clearTag
+        );
 
 
-    clear.className =
-        "active-tag-clear";
+        activeTagFilter.appendChild(
+            tagLabel
+        );
+
+    }
 
 
-    clear.textContent =
-        "×";
+    if (activeAuthor) {
+
+        const authorLabel =
+            document.createElement("span");
+
+        authorLabel.className =
+            "active-tag-label";
+
+        authorLabel.textContent =
+            `AUTHOR: ${activeAuthor.toUpperCase()}`;
 
 
-    clear.title =
-        "Clear tag filter";
+        const clearAuthor =
+            document.createElement("button");
+
+        clearAuthor.className =
+            "active-tag-clear";
+
+        clearAuthor.textContent =
+            "×";
+
+        clearAuthor.title =
+            "Clear author filter";
 
 
-    clear.addEventListener(
-        "click",
-        clearActiveTag
-    );
+        clearAuthor.addEventListener(
+            "click",
+            clearActiveAuthor
+        );
 
 
-    label.appendChild(clear);
+        authorLabel.appendChild(
+            clearAuthor
+        );
 
 
-    activeTagFilter.appendChild(
-        label
-    );
+        activeTagFilter.appendChild(
+            authorLabel
+        );
+
+    }
 
 }
 
@@ -1919,6 +1973,35 @@ function clearActiveTag() {
 
     url.searchParams.delete(
         "tag"
+    );
+
+
+    window.history.pushState(
+        {},
+        "",
+        url
+    );
+
+
+    updateTagFilter();
+
+    renderAssets();
+
+}
+
+    function clearActiveAuthor() {
+
+    activeAuthor = null;
+
+
+    const url =
+        new URL(
+            window.location.href
+        );
+
+
+    url.searchParams.delete(
+        "author"
     );
 
 
@@ -2001,7 +2084,7 @@ function renderAssets() {
                 );
 
 
-            return (
+           return (
                 matchesType &&
                 matchesSoftware &&
                 matchesTag &&
