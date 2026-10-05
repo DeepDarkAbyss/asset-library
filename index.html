@@ -973,6 +973,17 @@ const assetDownload =
         "assetDownload"
     );
 
+    const sourceLinkCheck =
+    document.getElementById(
+        "sourceLinkCheck"
+    );
+
+
+const downloadLinkCheck =
+    document.getElementById(
+        "downloadLinkCheck"
+    );
+
 const searchInput =
     document.getElementById(
         "searchInput"
@@ -1388,6 +1399,33 @@ const archiveSubtitle =
 
 
         assetName.focus();
+
+    }
+);
+
+    assetSource.addEventListener(
+    "input",
+    () => {
+
+        scheduleLinkCheck(
+            assetSource,
+            sourceLinkCheck,
+            "source"
+        );
+
+    }
+);
+
+
+assetDownload.addEventListener(
+    "input",
+    () => {
+
+        scheduleLinkCheck(
+            assetDownload,
+            downloadLinkCheck,
+            "download"
+        );
 
     }
 );
@@ -3136,6 +3174,237 @@ logoutButton.addEventListener(
 
 }
 
+    let sourceCheckTimer = null;
+let downloadCheckTimer = null;
+
+
+    function escapeHtml(value) {
+
+    return String(value)
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+        .replace(
+            /</g,
+            "&lt;"
+        )
+        .replace(
+            />/g,
+            "&gt;"
+        )
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
+}
+
+async function checkLinkDuplicate(
+    field,
+    value,
+    outputElement
+) {
+
+    const normalized =
+        value.trim();
+
+
+    outputElement.innerHTML = "";
+
+    outputElement.classList.remove(
+        "visible",
+        "duplicate"
+    );
+
+
+    if (!normalized) {
+        return false;
+    }
+
+
+    let sourceQuery =
+        supabaseClient
+            .from("assets")
+            .select("id, name")
+            .eq("source", normalized)
+            .limit(1);
+
+
+    let downloadQuery =
+        supabaseClient
+            .from("assets")
+            .select("id, name")
+            .eq("download", normalized)
+            .limit(1);
+
+
+    if (editingAssetId !== null) {
+
+        sourceQuery =
+            sourceQuery.neq(
+                "id",
+                editingAssetId
+            );
+
+
+        downloadQuery =
+            downloadQuery.neq(
+                "id",
+                editingAssetId
+            );
+
+    }
+
+
+    const [
+        sourceResult,
+        downloadResult
+    ] = await Promise.all([
+        sourceQuery,
+        downloadQuery
+    ]);
+
+
+    if (
+        sourceResult.error
+    ) {
+
+        console.error(
+            "Source duplicate check failed:",
+            sourceResult.error
+        );
+
+    }
+
+
+    if (
+        downloadResult.error
+    ) {
+
+        console.error(
+            "Download duplicate check failed:",
+            downloadResult.error
+        );
+
+    }
+
+
+    const existing =
+        sourceResult.data?.[0] ||
+        downloadResult.data?.[0];
+
+
+    if (!existing) {
+        return false;
+    }
+
+
+    let location = "";
+
+
+    if (
+        sourceResult.data?.length &&
+        sourceResult.data[0].id === existing.id
+    ) {
+
+        location = "SOURCE";
+
+    } else {
+
+        location = "DOWNLOAD";
+
+    }
+
+
+    outputElement.innerHTML = `
+        <span class="link-check-label">
+            ⚠ LINK ALREADY EXISTS
+        </span>
+
+        Used by:
+        <span class="link-check-name">
+            ${escapeHtml(existing.name)}
+        </span>
+
+        (${location})
+    `;
+
+
+    outputElement.classList.add(
+        "visible",
+        "duplicate"
+    );
+
+
+    return true;
+
+}
+
+    function scheduleLinkCheck(
+    inputElement,
+    outputElement,
+    field
+) {
+
+    const value =
+        inputElement.value.trim();
+
+
+    clearTimeout(
+        field === "source"
+            ? sourceCheckTimer
+            : downloadCheckTimer
+    );
+
+
+    if (!value) {
+
+        outputElement.innerHTML = "";
+
+        outputElement.classList.remove(
+            "visible",
+            "duplicate"
+        );
+
+        return;
+
+    }
+
+
+    const timer =
+        setTimeout(
+            () => {
+
+                checkLinkDuplicate(
+                    field,
+                    value,
+                    outputElement
+                );
+
+            },
+            400
+        );
+
+
+    if (field === "source") {
+
+        sourceCheckTimer =
+            timer;
+
+    } else {
+
+        downloadCheckTimer =
+            timer;
+
+    }
+
+}
+
 addAssetForm.addEventListener(
     "submit",
     async event => {
@@ -3145,6 +3414,21 @@ addAssetForm.addEventListener(
 
         addAssetStatus.textContent =
             "SAVING...";
+
+            const sourceDuplicate =
+        await checkLinkDuplicate(
+            "source",
+            assetSource.value,
+            sourceLinkCheck
+        );
+    
+    
+    const downloadDuplicate =
+        await checkLinkDuplicate(
+            "download",
+            assetDownload.value,
+            downloadLinkCheck
+        );
 
 
         const tags =
