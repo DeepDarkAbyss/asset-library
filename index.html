@@ -1860,15 +1860,32 @@ function updateTagFilter() {
     ) {
 
         archiveSubtitle.textContent =
-            "Brushes, materials, textures and everything else I refuse to lose.";
+            "Brushes, materials, textures and everything else I refuse to lose. I don't own any of these assets.";
 
         return;
 
     }
 
 
-    archiveSubtitle.textContent =
-        "Showing assets filtered by tag or author.";
+        if (
+        activeTag &&
+        activeAuthor
+    ) {
+    
+        archiveSubtitle.textContent =
+            "Showing assets filtered by tag and author.";
+    
+    } else if (activeTag) {
+    
+        archiveSubtitle.textContent =
+            "Showing assets filtered by tag.";
+    
+    } else if (activeAuthor) {
+    
+        archiveSubtitle.textContent =
+            "Showing assets filtered by author.";
+    
+    }
 
 
     if (activeTag) {
