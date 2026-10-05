@@ -39,11 +39,21 @@ textarea {
     font: inherit;
 }
 
+/* Всё интерактивное */
 a,
 button,
 input,
-select {
-    cursor: url("cursor2.png") 4 4, auto;
+textarea,
+select,
+[role="button"] {
+    cursor: url("cursor2.png") 4 4, pointer;
+}
+
+/* Обычный текст */
+p,
+span,
+div {
+    cursor: url("cursor.png") 4 4, auto;
 }
 
 button {
