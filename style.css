@@ -1365,9 +1365,9 @@ main {
     background: var(--color, #fff);
     opacity: var(--opacity, 0.9);
     box-shadow:
-        0 0 10px currentColor,
-        0 0 22px currentColor,
-        0 0 38px rgba(255, 255, 255, 0.35);
+        0 0 12px currentColor,
+        0 0 24px currentColor,
+        0 0 40px currentColor;
     transform: translate(-50%, -50%);
     animation: sparklePulse var(--twinkle-duration, 3s) ease-in-out infinite;
     will-change: left, top, opacity;
