@@ -3620,22 +3620,22 @@ addAssetForm.addEventListener(
     }
 );
 
-    /* =========================
+   /* =========================
    FLOATING SPARKLE BACKGROUND
    ========================= */
 
 const sparkleBackground = document.querySelector(".sparkle-background");
 
-const SPARKLE_COUNT = 22;
+const SPARKLE_COUNT = 24;
 const sparkles = [];
 let mouseX = window.innerWidth / 2;
 let mouseY = window.innerHeight / 2;
 
 const sparkleColors = [
-    "#ff3b3b", // red
-    "#2f6bff", // blue
-    "#ffd84a", // yellow
-    "#43d17a"  // green
+    "#ff3b3b",
+    "#2f6bff",
+    "#ffd84a",
+    "#43d17a"
 ];
 
 function createSparkles() {
@@ -3648,25 +3648,27 @@ function createSparkles() {
         const dot = document.createElement("span");
         dot.className = "sparkle-dot";
 
-        const size = 2 + Math.random() * 4;
-        const x = Math.random() * window.innerWidth;
-        const y = Math.random() * window.innerHeight;
+        const size = 3 + Math.random() * 5;
+        const x = 40 + Math.random() * (window.innerWidth - 80);
+        const y = 40 + Math.random() * (window.innerHeight - 80);
         const color = sparkleColors[Math.floor(Math.random() * sparkleColors.length)];
-        const twinkleDuration = 2.4 + Math.random() * 4.5;
-        const opacity = 0.35 + Math.random() * 0.55;
+        const twinkleDuration = 2.5 + Math.random() * 4.5;
+        const opacity = 0.45 + Math.random() * 0.45;
 
+        dot.style.setProperty("--x", `${x}px`);
+        dot.style.setProperty("--y", `${y}px`);
         dot.style.setProperty("--size", `${size}px`);
         dot.style.setProperty("--color", color);
         dot.style.setProperty("--twinkle-duration", `${twinkleDuration}s`);
         dot.style.setProperty("--opacity", opacity);
+        dot.style.color = color;
 
         dot.dataset.baseX = x;
         dot.dataset.baseY = y;
-        dot.dataset.x = x;
-        dot.dataset.y = y;
+        dot.dataset.offsetX = 0;
+        dot.dataset.offsetY = 0;
         dot.dataset.vx = 0;
         dot.dataset.vy = 0;
-        dot.dataset.delay = Math.random() * 0.8;
 
         sparkleBackground.appendChild(dot);
         sparkles.push(dot);
@@ -3674,47 +3676,49 @@ function createSparkles() {
 }
 
 function animateSparkles() {
-    const influenceRadius = 170;
-    const repulseStrength = 0.9;
-    const returnStrength = 0.02;
+    const radius = 180;
+    const pushStrength = 0.8;
+    const returnStrength = 0.03;
+    const damping = 0.86;
 
-    sparkles.forEach(dot => {
+    for (const dot of sparkles) {
         const baseX = parseFloat(dot.dataset.baseX);
         const baseY = parseFloat(dot.dataset.baseY);
-        let x = parseFloat(dot.dataset.x);
-        let y = parseFloat(dot.dataset.y);
+        let offsetX = parseFloat(dot.dataset.offsetX);
+        let offsetY = parseFloat(dot.dataset.offsetY);
         let vx = parseFloat(dot.dataset.vx);
         let vy = parseFloat(dot.dataset.vy);
 
-        const dxToMouse = x - mouseX;
-        const dyToMouse = y - mouseY;
-        const distance = Math.hypot(dxToMouse, dyToMouse);
+        const currentX = baseX + offsetX;
+        const currentY = baseY + offsetY;
 
-        if (distance < influenceRadius) {
-            const force = (1 - distance / influenceRadius) * repulseStrength;
-            const pushX = (dxToMouse / (distance || 1)) * force * 14;
-            const pushY = (dyToMouse / (distance || 1)) * force * 14;
+        const dx = currentX - mouseX;
+        const dy = currentY - mouseY;
+        const distance = Math.hypot(dx, dy);
 
-            vx += pushX;
-            vy += pushY;
+        if (distance < radius) {
+            const force = (1 - distance / radius) * pushStrength;
+            vx += (dx / (distance || 1)) * force * 10;
+            vy += (dy / (distance || 1)) * force * 10;
         }
 
-        vx += (baseX - x) * returnStrength;
-        vy += (baseY - y) * returnStrength;
+        vx += (0 - offsetX) * returnStrength;
+        vy += (0 - offsetY) * returnStrength;
 
-        vx *= 0.88;
-        vy *= 0.88;
+        vx *= damping;
+        vy *= damping;
 
-        x += vx;
-        y += vy;
+        offsetX += vx;
+        offsetY += vy;
 
-        dot.dataset.x = x;
-        dot.dataset.y = y;
+        dot.dataset.offsetX = offsetX;
+        dot.dataset.offsetY = offsetY;
         dot.dataset.vx = vx;
         dot.dataset.vy = vy;
 
-        dot.style.transform = `translate3d(${x - baseX}px, ${y - baseY}px, 0)`;
-    });
+        dot.style.setProperty("--x", `${baseX + offsetX}px`);
+        dot.style.setProperty("--y", `${baseY + offsetY}px`);
+    }
 
     requestAnimationFrame(animateSparkles);
 }
