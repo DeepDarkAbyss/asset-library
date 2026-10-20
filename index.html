@@ -3620,6 +3620,118 @@ addAssetForm.addEventListener(
     }
 );
 
+    /* =========================
+   FLOATING SPARKLE BACKGROUND
+   ========================= */
+
+const sparkleBackground = document.querySelector(".sparkle-background");
+
+const SPARKLE_COUNT = 22;
+const sparkles = [];
+let mouseX = window.innerWidth / 2;
+let mouseY = window.innerHeight / 2;
+
+const sparkleColors = [
+    "#ff3b3b", // red
+    "#2f6bff", // blue
+    "#ffd84a", // yellow
+    "#43d17a"  // green
+];
+
+function createSparkles() {
+    if (!sparkleBackground) return;
+
+    sparkleBackground.innerHTML = "";
+    sparkles.length = 0;
+
+    for (let i = 0; i < SPARKLE_COUNT; i++) {
+        const dot = document.createElement("span");
+        dot.className = "sparkle-dot";
+
+        const size = 2 + Math.random() * 4;
+        const x = Math.random() * window.innerWidth;
+        const y = Math.random() * window.innerHeight;
+        const color = sparkleColors[Math.floor(Math.random() * sparkleColors.length)];
+        const twinkleDuration = 2.4 + Math.random() * 4.5;
+        const opacity = 0.35 + Math.random() * 0.55;
+
+        dot.style.setProperty("--size", `${size}px`);
+        dot.style.setProperty("--color", color);
+        dot.style.setProperty("--twinkle-duration", `${twinkleDuration}s`);
+        dot.style.setProperty("--opacity", opacity);
+
+        dot.dataset.baseX = x;
+        dot.dataset.baseY = y;
+        dot.dataset.x = x;
+        dot.dataset.y = y;
+        dot.dataset.vx = 0;
+        dot.dataset.vy = 0;
+        dot.dataset.delay = Math.random() * 0.8;
+
+        sparkleBackground.appendChild(dot);
+        sparkles.push(dot);
+    }
+}
+
+function animateSparkles() {
+    const influenceRadius = 170;
+    const repulseStrength = 0.9;
+    const returnStrength = 0.02;
+
+    sparkles.forEach(dot => {
+        const baseX = parseFloat(dot.dataset.baseX);
+        const baseY = parseFloat(dot.dataset.baseY);
+        let x = parseFloat(dot.dataset.x);
+        let y = parseFloat(dot.dataset.y);
+        let vx = parseFloat(dot.dataset.vx);
+        let vy = parseFloat(dot.dataset.vy);
+
+        const dxToMouse = x - mouseX;
+        const dyToMouse = y - mouseY;
+        const distance = Math.hypot(dxToMouse, dyToMouse);
+
+        if (distance < influenceRadius) {
+            const force = (1 - distance / influenceRadius) * repulseStrength;
+            const pushX = (dxToMouse / (distance || 1)) * force * 14;
+            const pushY = (dyToMouse / (distance || 1)) * force * 14;
+
+            vx += pushX;
+            vy += pushY;
+        }
+
+        vx += (baseX - x) * returnStrength;
+        vy += (baseY - y) * returnStrength;
+
+        vx *= 0.88;
+        vy *= 0.88;
+
+        x += vx;
+        y += vy;
+
+        dot.dataset.x = x;
+        dot.dataset.y = y;
+        dot.dataset.vx = vx;
+        dot.dataset.vy = vy;
+
+        dot.style.transform = `translate3d(${x - baseX}px, ${y - baseY}px, 0)`;
+    });
+
+    requestAnimationFrame(animateSparkles);
+}
+
+window.addEventListener("mousemove", event => {
+    mouseX = event.clientX;
+    mouseY = event.clientY;
+});
+
+window.addEventListener("resize", () => {
+    createSparkles();
+});
+
+createSparkles();
+animateSparkles();
+
+
 initializeAuth();
 
 loadAssets();
