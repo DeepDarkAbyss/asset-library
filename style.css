@@ -1349,20 +1349,17 @@ main {
 
 .sparkle-dot {
     position: absolute;
-    width: var(--size, 6px);
-    height: var(--size, 6px);
+    width: 12px;
+    height: 12px;
     border-radius: 50%;
-    background: var(--color, #ffffff);
-    opacity: var(--opacity, 0.8);
-    box-shadow:
-        0 0 8px currentColor,
-        0 0 16px currentColor,
-        0 0 28px currentColor;
+    background: red;
+    box-shadow: 0 0 20px red;
+    opacity: 1;
     transform: translate3d(0, 0, 0);
-    transition: opacity 0.2s ease;
-    animation: sparklePulse var(--twinkle-duration, 3s) ease-in-out infinite;
-    will-change: transform, opacity;
+    animation: none;
+    z-index: 9999;
 }
+
 
 @keyframes sparklePulse {
     0%, 100% {
