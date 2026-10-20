@@ -245,19 +245,27 @@ main {
     display: grid;
     grid-template-columns: minmax(150px, 38%) 1fr;
 
-    border: 1px solid var(--border);
-    background: var(--panel);
+    border: 1px solid rgba(199, 208, 217, 0.18);
+    background: rgba(231, 235, 239, 0.06);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
 
     cursor: pointer;
 
     transition:
-        background 0.15s ease,
-        border-color 0.15s ease;
+        background 0.18s ease,
+        border-color 0.18s ease,
+        transform 0.18s ease,
+        box-shadow 0.18s ease;
 }
 
 .asset-card:hover {
-    background: var(--panel-hover);
-    border-color: #4a4a4a;
+    background: rgba(231, 235, 239, 0.1);
+    border-color: rgba(47, 107, 255, 0.35);
+    box-shadow:
+        0 12px 30px rgba(0, 0, 0, 0.18),
+        0 0 0 1px rgba(47, 107, 255, 0.08);
+    transform: translateY(-1px);
 }
 
 .asset-preview {
@@ -270,9 +278,13 @@ main {
     padding: 15px;
 
     background:
-        linear-gradient(135deg, #191919, #0c0c0c);
+        linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.04),
+            rgba(255, 255, 255, 0.01)
+        );
 
-    border-right: 1px solid var(--border);
+    border-right: 1px solid rgba(199, 208, 217, 0.14);
 }
 
 .preview-placeholder {
@@ -298,6 +310,12 @@ main {
 
     display: flex;
     flex-direction: column;
+
+    background: linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.02),
+        rgba(255, 255, 255, 0)
+    );
 }
 
 .asset-type {
