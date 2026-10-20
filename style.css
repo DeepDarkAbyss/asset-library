@@ -47,15 +47,34 @@ button,
 input,
 textarea,
 select,
-[role="button"] {
-    cursor: url("cursor2.png") 4 4, auto;
+summary,
+label,
+[role="button"],
+[onclick],
+.nav-link,
+.filter-button,
+.tag-link,
+.asset-card,
+.close-button,
+.tag-suggestion,
+.recent-tag,
+.button,
+.active-tag-clear,
+.gallery-image {
+    cursor: url("cursor2.png") 4 4, pointer !important;
 }
 
-/* Обычный текст */
-p,
-span,
-div {
-    cursor: url("cursor.png") 4 4, auto;
+/* Все состояния внутри интерактива тоже */
+a:hover,
+button:hover,
+input:hover,
+textarea:hover,
+select:hover,
+summary:hover,
+label:hover,
+[role="button"]:hover,
+[onclick]:hover {
+    cursor: url("cursor2.png") 4 4, pointer !important;
 }
 
 button {
