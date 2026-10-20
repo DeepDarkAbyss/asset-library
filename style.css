@@ -30,6 +30,8 @@ body {
     font-size: 15px;
     line-height: 1.6;
     cursor: url("cursor.png") 4 4, auto;
+    position: relative;
+    overflow-x: hidden;
 }
 
 button,
@@ -1336,3 +1338,48 @@ main {
     color: #fff;
     font-weight: 600;
 }
+
+.sparkle-background {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.sparkle-dot {
+    position: absolute;
+    width: var(--size, 6px);
+    height: var(--size, 6px);
+    border-radius: 50%;
+    background: var(--color, #ffffff);
+    opacity: var(--opacity, 0.8);
+    box-shadow:
+        0 0 8px currentColor,
+        0 0 16px currentColor,
+        0 0 28px currentColor;
+    transform: translate3d(0, 0, 0);
+    transition: opacity 0.2s ease;
+    animation: sparklePulse var(--twinkle-duration, 3s) ease-in-out infinite;
+    will-change: transform, opacity;
+}
+
+@keyframes sparklePulse {
+    0%, 100% {
+        opacity: calc(var(--opacity, 0.8) * 0.55);
+        filter: blur(0px);
+    }
+    50% {
+        opacity: var(--opacity, 0.8);
+        filter: blur(0.2px);
+    }
+}
+
+/* чтобы контент был поверх фона */
+body > header,
+body > main,
+body > .modal {
+    position: relative;
+    z-index: 1;
+}
+
