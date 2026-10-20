@@ -2542,6 +2542,9 @@ chronologicalAssets.forEach(
             info
         );
 
+        card.addEventListener("mouseenter", () => {
+            applyRandomHoverBorder(card);
+        });
 
 
         card.addEventListener(
@@ -3619,6 +3622,36 @@ addAssetForm.addEventListener(
 
     }
 );
+
+    const hoverBorderColors = [
+    {
+        main: "rgba(47, 107, 255, 0.38)",   // blue
+        soft: "rgba(47, 107, 255, 0.12)"
+    },
+    {
+        main: "rgba(255, 59, 59, 0.38)",    // red
+        soft: "rgba(255, 59, 59, 0.12)"
+    },
+    {
+        main: "rgba(255, 216, 74, 0.42)",   // yellow
+        soft: "rgba(255, 216, 74, 0.14)"
+    },
+    {
+        main: "rgba(67, 209, 122, 0.38)",   // green
+        soft: "rgba(67, 209, 122, 0.12)"
+    }
+];
+
+function applyRandomHoverBorder(card) {
+    const color =
+        hoverBorderColors[
+            Math.floor(Math.random() * hoverBorderColors.length)
+        ];
+
+    card.style.setProperty("--hover-border", color.main);
+    card.style.setProperty("--hover-border-soft", color.soft);
+}
+
 
 /* =========================
    FLOATING SPARKLE BACKGROUND
