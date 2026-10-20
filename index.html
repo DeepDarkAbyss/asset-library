@@ -3626,7 +3626,7 @@ addAssetForm.addEventListener(
 
 const sparkleBackground = document.querySelector(".sparkle-background");
 
-const SPARKLE_COUNT = 28;
+const SPARKLE_COUNT = 48;
 const sparkles = [];
 let mouseX = window.innerWidth / 2;
 let mouseY = window.innerHeight / 2;
@@ -3650,8 +3650,8 @@ function createSparkles() {
 
         const isBright = Math.random() > 0.72;
         const size = isBright
-            ? 5 + Math.random() * 4
-            : 2 + Math.random() * 4;
+            ? 4 + Math.random() * 3
+            : 2 + Math.random() * 2.5;
 
         const x = 40 + Math.random() * (window.innerWidth - 80);
         const y = 40 + Math.random() * (window.innerHeight - 80);
@@ -3659,8 +3659,8 @@ function createSparkles() {
         const color = sparkleColors[Math.floor(Math.random() * sparkleColors.length)];
         const twinkleDuration = 2.2 + Math.random() * 4.8;
         const opacity = isBright
-            ? 0.72 + Math.random() * 0.28
-            : 0.35 + Math.random() * 0.35;
+            ? 0.82 + Math.random() * 0.18
+            : 0.55 + Math.random() * 0.25;
 
         const wobbleX = (Math.random() - 0.5) * 0.7;
         const wobbleY = (Math.random() - 0.5) * 0.7;
